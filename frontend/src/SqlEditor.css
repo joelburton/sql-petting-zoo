@@ -1,0 +1,12 @@
+.SqlEditor-buttons {
+  display: flex;
+}
+
+.SqlEditor-buttons button {
+    margin-right: 0.5em;
+}
+
+.SqlEditor-buttons button:last-child {
+  margin-left: auto;
+  margin-right: 0;
+}

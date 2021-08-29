@@ -1,0 +1,121 @@
+id: aggregates
+title: SUM and COUNT
+closed: false
+db_name: world
+description: |
+  This tutorial looks at how we can use SELECT statements within SELECT statements
+  to perform more complex queries.
+
+schema: |
+  ##### The `world` table
+
+  | Column      | Type         | Nullable | Notes                   |
+  | ----------- | ------------ | -------- | ----------------------- |
+  | name        | varchar(50)  | not null | English name of country |
+  | region      | varchar(60)  |          |                         |
+  | area        | bigint       |          |                         |
+  | population  | bigint       |          |                         |
+  | gdp         | bigint       |          |                         |
+  | capital     | varchar(60)  |          |                         |
+  | tld         | varchar(5)   |          |                         |
+  | flag        | varchar(255) |          |                         |
+
+  - Indexes:
+    - "world_pkey" PRIMARY KEY, btree (name)
+    - "world_region_idx" btree (region)
+
+  ###### Sample data
+
+  | name        | region | area   | population | gdp         | capital | tld | flag                  |
+  | ----------- | ------ | ------ | ---------- | ----------- | ------- | --- | --------------------- |
+  | Afghanistan | Asia   | 652230 | 25500100   | 20364000000 | Kabul   | .af | //upload.wikimedia... |
+  | Zimbabwe    | Africa | 390757 | 13061239   | 9802000000  | Harare  | .zw | //upload.wikimedia... |
+
+  ##### Footnotes
+
+  ###### Per Capita GDP
+  The per capita GDP is the GDP divided by the population. It is a rough measure
+   of the average salary. A rich country is one with a high per capita GDP.
+
+  ###### Area
+  The area is measured in square kilometers.
+questions:
+
+  total-world-pop:
+    title: Total world population
+    body: |
+      Show the total population of the world.
+
+          world(name, continent, area, population, gdp)
+    initial: |
+      SELECT SUM(population)
+        FROM world;
+    solution: |
+      SELECT SUM(population)
+        FROM world;
+
+  list-of-regions:
+    title: List of Regions
+    body: |
+      List all of the regions --- each one just once.
+    solution: |
+      SELECT region
+        FROM world
+        GROUP BY region;
+
+  gdp-of-africa:
+    title: GDP of Africa
+    body: |
+      Give the total GDP of Africa.
+    solution: |
+      SELECT sum(gdp)
+        FROM world
+        WHERE region = 'Africa';
+
+  count-big-countries:
+    title: Count the big countries
+    body: |
+      How many countries have an **area** of at least 1000000?
+    solution: |
+      SELECT COUNT(*)
+        FROM world
+        WHERE area > 1000000;
+
+  baltic-pop:
+    title: Baltic states population
+    body: |
+      What is the total **population** of Estonia, Latvia, and Lithuania?
+    solution: |
+      SELECT SUM(population)
+        FROM world
+        WHERE name IN ('Estonia', 'Latvia', 'Lithuania');
+
+  count-by-region:
+    title: Counting the countries of each region
+    body: |
+      For each **region** show the region and number of countries.
+    solution: |
+      SELECT region, COUNT(*)
+        FROM world
+        GROUP BY region;
+
+  count-big-pop-by-region:
+    title: Counting big countries in each region
+    body: |
+      For each continent show the continent and number of countries with
+      populations of at least 10 million.
+    solution: |
+      SELECT region, COUNT(*)
+        FROM world
+        WHERE population > 10000000
+        GROUP BY region;
+
+  count-big-regions:
+    title: Counting big regions
+    body: |
+      List the regions that have a total population of at least 100 million.
+    solution: |
+      SELECT region
+        FROM world
+        GROUP BY region
+        HAVING SUM(population) >= 100000000;
