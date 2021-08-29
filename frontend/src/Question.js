@@ -1,59 +1,93 @@
-import React, { useState } from "react";
+import { submitSql } from "./api";
+import { HAS_SEEN, NEVER_SEEN, NOW_SHOWING } from "./globals";
+
+import { useState } from "react";
 import { Col } from "react-bootstrap";
 import Markdown from "react-remarkable";
-import "./Question.css";
-
-import { submitSql } from "./api";
 
 import SqlEditor from "./SqlEditor";
-
-import { HAS_SEEN, NEVER_SEEN, NOW_SHOWING } from "./globals";
 import Results from "./Results";
+
+import "./Question.css";
+
 
 /** Question in a quiz.
  *
- * @param quizId {string}
- * @param q: Question {title, body, initial, solution}
- * @param idx: ordinal number of question
+ * - quizId
+ * - q: Question {title, body, initial, solution}
+ * - questionId
+ * - toggleSchema: fn that will toggle schema display on/off
+ * - prev: from localStorage, previous interactions with this question
+ *     (see explanation in PettingZoo)
+ *
+ * Quiz -> Question -> {SqlEditor, Results}
  *
  */
 
-function Question({ quizId, q, questionId, toggleSchema, prev }) {
+function Question({ quizId, question, questionId, toggleSchema, prev }) {
+  // results is null until submitted to server, then will be
+  //   {rows, cols, problems}
   const [results, setResults] = useState(null);
+
+  // three-way state for never-seen/not-seeing/currently-seeing hints/solutions
+  //   (is synced to localStorage)
   const [showingHint, setShowingHint] = useState(prev.showingHint);
   const [showingSolution, setShowingSolution] = useState(prev.showingSolution);
+
+  // did user solve this without peeking? (is synced to localStorage)
   const [solved, setSolved] = useState(prev.solved);
+
+  // are they currently viewing the expected outcome of query?
   const [showingExpected, setShowingExpected] = useState(false);
 
-  function updateLS(changeObj) {
-    const newLS = JSON.parse(localStorage.getItem(quizId));
-    newLS[questionId] = { ...newLS[questionId], ...changeObj };
-    console.log("updateLS", changeObj, newLS);
-    localStorage.setItem(quizId, JSON.stringify(newLS));
+  /** Update localStorage for this question in quiz.
+   *
+   * - changeObj: properties to change
+   *
+   */
+
+  function updateLocalStorage(changeObj) {
+    const lsData = JSON.parse(localStorage.getItem(quizId));
+    lsData[questionId] = { ...lsData[questionId], ...changeObj };
+    localStorage.setItem(quizId, JSON.stringify(lsData));
   }
 
-  async function submit(sql) {
+  /** Submit SQL to server and process results. */
+
+  async function submitSqlToServer(sql) {
     const { rows, cols, problems } = await submitSql(quizId, questionId, sql);
-    setShowingExpected(false);
+
+    // Given that they just sent new SQL to server, hide the expected outcome
+    //  (if they were even viewing it already)
+    // setShowingExpected(false);
     setResults({ rows, cols, problems });
+
     if (!problems) {
       if (showingSolution === NEVER_SEEN || solved) {
         setSolved(true);
-        updateLS({ solved: true, sql });
+        updateLocalStorage({ solved: true, sql });
       } else {
-        updateLS({ solved: false, sql: "(looked at solution)" });
+        updateLocalStorage({ solved: false, sql: "(peeked)" });
       }
     }
   }
+
+  /** Toggle hint on/off and note that they've peeked at it. */
 
   function toggleHint() {
     if (showingHint === NOW_SHOWING) {
       setShowingHint(HAS_SEEN);
     } else {
       setShowingHint(NOW_SHOWING);
-      updateLS({ showingHint: HAS_SEEN });
+      updateLocalStorage({ showingHint: HAS_SEEN });
     }
   }
+
+  /** Toggle solution on/off and note that they've peek at it.
+   *
+   * Returns the solution if they're viewing.
+   *
+   */
 
   function toggleSolution() {
     if (showingSolution === NOW_SHOWING) {
@@ -61,41 +95,44 @@ function Question({ quizId, q, questionId, toggleSchema, prev }) {
       return;
     }
     setShowingSolution(NOW_SHOWING);
-    updateLS({ showingSolution: HAS_SEEN });
-    return q.solution;
+    updateLocalStorage({ showingSolution: HAS_SEEN });
+    return question.solution;
   }
 
 
   return (
-    <div className="Question row mt-5">
-      <Col lg={ 6 }>
-        <h3>
-          { solved && <span className="me-1">✅</span> }
-          { q.title }
-        </h3>
-        <Markdown children={ q.body } />
-        <SqlEditor
-          initial={ q.initial }
-          submit={ submit }
-          toggleHint={ q.hint && toggleHint }
-          showingHint={ showingHint }
-          toggleSolution={ q.solution && toggleSolution }
-          showingSolution={ showingSolution }
-          toggleSchema={ toggleSchema }
+      <div className="Question row mt-5">
+        <Col lg={ 6 }>
+          <h3>
+            { solved && <span className="me-1">✅</span> }
+            { question.title }
+          </h3>
+          <Markdown children={ question.body } />
+
+          <SqlEditor
+              initial={ question.initial }
+              submitSqlToServer={ submitSqlToServer }
+              toggleHint={ question.hint && toggleHint }
+              showingHint={ showingHint }
+              toggleSolution={ question.solution && toggleSolution }
+              showingSolution={ showingSolution }
+              toggleSchema={ toggleSchema }
+          />
+
+          {
+            showingHint === NOW_SHOWING &&
+            <Markdown className="mt-3" children={ question.hint } />
+          }
+        </Col>
+
+        { results && <Results
+            expected={ showingExpected && question.expected }
+            setShowingExpected={ setShowingExpected}
+            results={ results }
+            solution={ question.solution }
         />
-        {
-          showingHint === NOW_SHOWING &&
-          <Markdown className="mt-3" children={ q.hint } />
         }
-      </Col>
-      { results && <Results
-        expected={ showingExpected && q.expected }
-        results={ results }
-        solution={ q.solution }
-        setShowingExpected={ setShowingExpected }
-      />
-      }
-    </div>
+      </div>
   );
 }
 

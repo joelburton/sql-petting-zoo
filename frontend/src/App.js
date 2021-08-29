@@ -1,14 +1,20 @@
-import "./App.css";
 import { BrowserRouter } from "react-router-dom";
+
 import PettingZoo from "./PettingZoo";
+
+
+/** Top of React component: set up browser router.
+ *
+ *
+ * App -> PettingZoo
+ *
+ **/
 
 function App() {
   return (
-    <div className="App">
       <BrowserRouter>
         <PettingZoo />
       </BrowserRouter>
-    </div>
   );
 }
 
