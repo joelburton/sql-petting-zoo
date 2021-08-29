@@ -8,7 +8,7 @@ import axios from "axios";
  * @returns {Promise<{result, isCorrect}>}
  */
 
-const BASE_URL = "http://localhost:5000/api";
+const BASE_URL = process.env.REACT_APP_BASE_URL || "http://localhost:5000/api";
 
 async function submitSql(quizId, questionNum, sql) {
   const response = await fetch(
