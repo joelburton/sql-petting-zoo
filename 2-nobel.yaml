@@ -11,7 +11,7 @@ description: |
   ```
 
   Using the `SELECT` statement.
-db_name: nobel
+db_name: zoo
 schema: |
   | Column  |         Type          | Nullable |              Default               |
   | --------|-----------------------|----------|----------------------------------- |
