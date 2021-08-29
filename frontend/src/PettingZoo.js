@@ -8,6 +8,7 @@ import { Container } from "react-bootstrap";
 import SiteFooter from "./SiteFooter";
 import { getQuizzes } from "./api";
 import Homepage from "./Homepage";
+import AnimalEmoji from "./AnimalEmoji";
 
 function PettingZoo() {
   const [quizzes, setQuizzes] = useState(null);
@@ -45,29 +46,26 @@ function PettingZoo() {
     localStorage.setItem(quizId, JSON.stringify(prevResults));
   }
 
-  function showLoading() {
-    return <Route>Loading...</Route>;
-  }
-
-  function showRoutes() {
-    return (
-      <Route path="/:quizId/" render={ routeProps => {
-        const id = routeProps.match.params.quizId;
-        const prev = JSON.parse(localStorage.getItem(id));
-        // console.log("Route", id, JSON.parse(localStorage.getItem("world")), prev, quizzes, quizzes[id]);
-        return <Quiz quizId={ id } quiz={ quizzes[id] } prev={ prev } />;
-      } }
-      />
-    );
-  }
+  if (!quizzes) return (
+    <div
+      className="d-flex flex-column min-vh-100 justify-content-center align-items-center fs-2">
+      <AnimalEmoji className="fs-1" /> Loading&hellip;
+    </div>
+  );
 
   return (
     <div className="PettingZoo">
-      <SiteNavbar quizzes={quizzes || {}} />
+      <SiteNavbar quizzes={ quizzes } />
       <Container>
         <Switch>
-          { quizzes ? showRoutes() : showLoading() }
-          <Route path="/"><Homepage quizzes={quizzes || {}} /></Route>
+          <Route path="/" exact><Homepage quizzes={ quizzes || {} } /></Route>
+          <Route path="/:quizId/" exact render={ routeProps => {
+            const id = routeProps.match.params.quizId;
+            const prev = JSON.parse(localStorage.getItem(id));
+            // console.log("Route", id, JSON.parse(localStorage.getItem("world")), prev, quizzes, quizzes[id]);
+            return <Quiz quizId={ id } quiz={ quizzes[id] } prev={ prev } />;
+          } }
+          />
           <Redirect to="/"></Redirect>
         </Switch>
       </Container>

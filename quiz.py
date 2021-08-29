@@ -8,7 +8,7 @@ import psycopg2
 import psycopg2.extensions
 import yaml
 
-DATABASE_URL = os.environ.get("DATABASE_URL", "postgresql:///zoo-local")
+DATABASE_URL = os.environ.get("DATABASE_URL", "postgresql:///zoo_local")
 
 
 # noinspection PyUnresolvedReferences

@@ -58,8 +58,10 @@ def api_run(quiz_id: str, question_id: str) -> Dict[str, str]:
     with psycopg2.connect(DATABASE_URL) as conn:
         with conn.cursor() as cur:
             try:
+                # Mitigate DOS attacks/accidental terrible queries
+                cur.execute("SET statement_timeout TO '100ms'")
                 cur.execute(sql)
-                cols = [c.name for c in cur.description]
+                cols = [c.name for c in cur.description or []]
                 rows = cur.fetchall()
                 outcome = {"cols": cols, "rows": rows}
                 problems = quiz.get_problems(question_id, outcome)
@@ -67,7 +69,7 @@ def api_run(quiz_id: str, question_id: str) -> Dict[str, str]:
             except Error as err:
                 rows = [str(err)]
                 cols = []
-                problems = f"Ut oh! You've got a syntax error."
+                problems = f"Ut oh! An error happened."
         # print("why not", quiz.questions[question_num]["expected"], outcome)
 
     # results = render_template("_results.html", cols=cols, rows=rows)

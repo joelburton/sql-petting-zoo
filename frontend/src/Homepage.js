@@ -11,9 +11,13 @@ function Homepage({quizzes}) {
         you are welcome to explore it.
       </p>
 
-      { Object.entries(quizzes).map(([id, quiz]) => (
+      { Object.entries(quizzes).map(([id, quiz], idx) => (
         <div className="mt-5" key={id}>
-          <h2><Link className="text-decoration-none" to={`/${id}/`}>{ quiz.title }</Link></h2>
+          <h2>
+            <Link className="text-decoration-none" to={`/${id}/`}>
+              {idx}. { quiz.title }
+            </Link>
+          </h2>
           <Markdown children={quiz.description} />
         </div>
       )) }
