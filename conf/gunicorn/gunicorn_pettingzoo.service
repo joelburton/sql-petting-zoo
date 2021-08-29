@@ -1,0 +1,25 @@
+# This file meant to be softlinked into /etc/systemd/system on Linux servers;
+# it will start up gunicorn on system boot, and provides convenient commands to
+# stop and start gunicorn:
+#
+# sudo systemctl stop gunicorn_sis
+# sudo systemctl start gunicorn_sis
+#
+# (there's also restart, but it's more convenient to restart gunicorn with:
+#
+#   kill -HUP `cat sis.pid`
+#
+# It assumes that the Git root for SIS is at /home/ubuntu/sis; you can change that below.
+
+[Unit]
+Description=gunicorn daemon
+After=network.target
+
+[Service]
+User=ubuntu
+Group=www-data
+WorkingDirectory=/home/ubuntu/sql-petting-zoo/
+ExecStart=/home/ubuntu/sis/venv/bin/gunicorn --capture-output -w 3 -p sql-petting-zoo.pid -b unix:sql-petting-zoo.sock app
+
+[Install]
+WantedBy=multi-user.target
