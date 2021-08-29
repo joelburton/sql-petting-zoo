@@ -1,7 +1,5 @@
 id: world-subquery
 title: SELECT within SELECT
-closed: false
-db_name: zoo
 description: |
   This tutorial looks at how we can use SELECT statements within SELECT statements
   to perform more complex queries.

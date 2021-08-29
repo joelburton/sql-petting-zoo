@@ -1,6 +1,5 @@
 id: nobel
 title: Nobel Laureates
-closed: false
 description: |
   We continue practicing simple SQL queries on a single table.
 
@@ -11,7 +10,6 @@ description: |
   ```
 
   Using the `SELECT` statement.
-db_name: zoo
 schema: |
   | Column  |         Type          | Nullable |              Default               |
   | --------|-----------------------|----------|----------------------------------- |

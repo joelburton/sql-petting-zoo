@@ -2,14 +2,14 @@ from __future__ import annotations
 
 import os
 from dataclasses import dataclass
-from pprint import pprint
-from typing import Any, Dict, List
+from typing import Any, Dict
 
 import psycopg2
 import psycopg2.extensions
-from psycopg2 import extensions
-
 import yaml
+
+DATABASE_URL = os.environ.get("DATABASE_URL", "postgresql:///zoo-local")
+
 
 # noinspection PyUnresolvedReferences
 decToFloat = psycopg2.extensions.new_type(
@@ -28,11 +28,10 @@ class Quiz:
     id: str
     title: str
     description: str
-    closed: bool
     questions: Dict[str, Dict]
     filepath: str
-    db_name: str
     schema: str = ""
+    closed: bool = False
 
     _expected_attached: bool = False
 
@@ -65,7 +64,7 @@ class Quiz:
         # quizzes do not have this.
 
         if not self.closed:
-            with psycopg2.connect(f"dbname={self.db_name}") as conn:
+            with psycopg2.connect(DATABASE_URL) as conn:
                 with conn.cursor() as cur:
                     for question in self.questions.values():
                         cur.execute(question['solution'])

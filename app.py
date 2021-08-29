@@ -7,7 +7,7 @@ from psycopg2.errors import SyntaxError
 from flask import Flask, Response, request
 from flask_cors import CORS
 
-from quiz import Quiz
+from quiz import Quiz, DATABASE_URL
 
 app = Flask(__name__)
 CORS(app)
@@ -55,7 +55,7 @@ def api_run(quiz_id: str, question_id: str) -> Dict[str, str]:
 
     quiz = quizzes[quiz_id]
 
-    with psycopg2.connect(f"dbname={quiz.db_name}") as conn:
+    with psycopg2.connect(DATABASE_URL) as conn:
         with conn.cursor() as cur:
             try:
                 cur.execute(sql)

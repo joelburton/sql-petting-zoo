@@ -1,7 +1,5 @@
 id: intro
 title: Select Basics
-closed: false
-db_name: zoo
 description: |
   Learn the basics of the SQL `SELECT` statement, as well as getting an
   introduction to SQLPettingZoo.

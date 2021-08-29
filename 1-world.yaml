@@ -1,7 +1,5 @@
 id: world
 title: SELECT from WORLD
-closed: false
-db_name: zoo
 description: |
   In this tutorial you will use the SELECT command on the table `world`.
 schema: |
