@@ -24,7 +24,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "deploy": "REACT_APP_BASE_URL=http://sql-petting-zoo.joelburton.com/api npm run build && cp build/index.html build/200.html && surge build http://sql-petting-zoo.surge.joelburton.com"
   },
   "eslintConfig": {
     "extends": [
