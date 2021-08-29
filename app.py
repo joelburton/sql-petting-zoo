@@ -3,7 +3,7 @@ from typing import Dict
 
 import psycopg2
 # noinspection PyUnresolvedReferences
-from psycopg2.errors import SyntaxError
+from psycopg2.errors import Error
 from flask import Flask, Response, request
 from flask_cors import CORS
 
@@ -64,7 +64,7 @@ def api_run(quiz_id: str, question_id: str) -> Dict[str, str]:
                 outcome = {"cols": cols, "rows": rows}
                 problems = quiz.get_problems(question_id, outcome)
 
-            except SyntaxError as err:
+            except Error as err:
                 rows = [str(err)]
                 cols = []
                 problems = f"Ut oh! You've got a syntax error."
