@@ -13,8 +13,6 @@ schema: |
   | population  | bigint       |          |                         |
   | gdp         | bigint       |          |                         |
   | capital     | varchar(60)  |          |                         |
-  | tld         | varchar(5)   |          |                         |
-  | flag        | varchar(255) |          |                         |
 
   - Indexes:
     - "world_pkey" PRIMARY KEY, btree (name)
@@ -22,10 +20,10 @@ schema: |
 
   ###### Sample data
 
-  | name        | region | area   | population | gdp         | capital | tld | flag                  |
-  | ----------- | ------ | ------ | ---------- | ----------- | ------- | --- | --------------------- |
-  | Afghanistan | Asia   | 652230 | 25500100   | 20364000000 | Kabul   | .af | //upload.wikimedia... |
-  | Zimbabwe    | Africa | 390757 | 13061239   | 9802000000  | Harare  | .zw | //upload.wikimedia... |
+  | name        | region | area   | population | gdp         | capital |
+  | ----------- | ------ | ------ | ---------- | ----------- | ------- |
+  | Afghanistan | Asia   | 652230 | 25500100   | 20364000000 | Kabul   |
+  | Zimbabwe    | Africa | 390757 | 13061239   | 9802000000  | Harare  |
 
   ##### Footnotes
 
