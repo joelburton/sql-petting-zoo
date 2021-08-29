@@ -70,8 +70,8 @@ function PettingZoo() {
           <Route path="/"><Homepage quizzes={quizzes || {}} /></Route>
           <Redirect to="/"></Redirect>
         </Switch>
-      </Container>;
-      <SiteFooter />;
+      </Container>
+      <SiteFooter />
     </div>
   );
 }
