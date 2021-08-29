@@ -19,7 +19,7 @@ After=network.target
 User=ubuntu
 Group=www-data
 WorkingDirectory=/home/ubuntu/sql-petting-zoo/
-ExecStart=/home/ubuntu/sis/venv/bin/gunicorn --capture-output -w 3 -p sql-petting-zoo.pid -b unix:sql-petting-zoo.sock app
+ExecStart=/home/ubuntu/sql-petting-zoo/venv/bin/gunicorn --capture-output -w 3 -p sql-petting-zoo.pid -b unix:sql-petting-zoo.sock app:app
 
 [Install]
 WantedBy=multi-user.target
