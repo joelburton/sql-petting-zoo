@@ -19,6 +19,8 @@ After=network.target
 User=ubuntu
 Group=www-data
 WorkingDirectory=/home/ubuntu/sql-petting-zoo/
+Environment=FLASK_ENV=production
+Environment=DATABASE_URL=postgresql://zoo:lions-tigers-bears@localhost/zoo
 ExecStart=/home/ubuntu/sql-petting-zoo/venv/bin/gunicorn --capture-output -w 3 -p sql-petting-zoo.pid -b unix:sql-petting-zoo.sock app:app
 
 [Install]
