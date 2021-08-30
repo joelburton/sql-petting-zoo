@@ -55,11 +55,14 @@ function Question({ quizId, question, questionId, toggleSchema, prev }) {
   /** Submit SQL to server and process results. */
 
   async function submitSqlToServer(sql) {
+    // This will cause the results to disappear until the next load, which is
+    // enough UX change for the user to know "something is happening".
+    setResults(null);
     const { rows, cols, problems } = await submitSql(quizId, questionId, sql);
 
     // Given that they just sent new SQL to server, hide the expected outcome
     //  (if they were even viewing it already)
-    // setShowingExpected(false);
+    setShowingExpected(false);
     setResults({ rows, cols, problems });
 
     if (!problems) {
