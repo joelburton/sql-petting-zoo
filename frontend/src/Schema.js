@@ -7,7 +7,7 @@ import Markdown from "react-remarkable";
  * - schema: text of schema (in Markdown)
  * - toggleSchema: fn to toggle display
  *
- * Question -> Schema
+ * Quiz -> Schema
  *
  **/
 
