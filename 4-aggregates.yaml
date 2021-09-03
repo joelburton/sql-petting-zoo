@@ -1,8 +1,8 @@
 id: aggregates
 title: SUM and COUNT
 description: |
-  This tutorial looks at how we can use SELECT statements within SELECT statements
-  to perform more complex queries.
+  This tutorial looks at how we can use the SUM and COUNT functions to aggregate
+  our data.
 
 schema: |
   ##### The `world` table
