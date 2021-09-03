@@ -1,6 +1,6 @@
 
-DROP TABLE IF EXISTS game;
-CREATE TABLE game (
+DROP TABLE IF EXISTS match;
+CREATE TABLE match (
   id int DEFAULT NULL,
   mdate varchar(12) DEFAULT NULL,
   stadium varchar(100) DEFAULT NULL,
@@ -8,7 +8,7 @@ CREATE TABLE game (
   team2 varchar(100) DEFAULT NULL
 );
 
-INSERT INTO game
+INSERT INTO match
   (id, mdate, stadium, team1, team2)
 VALUES (1001,'8 June 2012','National Stadium, Warsaw','POL','GRE'),(1002,'8 June 2012','Stadion Miejski (Wroclaw)','RUS','CZE'),(1003,'12 June 2012','Stadion Miejski (Wroclaw)','GRE','CZE'),(1004,'12 June 2012','National Stadium, Warsaw','POL','RUS'),(1005,'16 June 2012','Stadion Miejski (Wroclaw)','CZE','POL'),(1006,'16 June 2012','National Stadium, Warsaw','GRE','RUS'),(1007,'9 June 2012','Metalist Stadium','NED','DEN'),(1008,'9 June 2012','Arena Lviv','GER','POR'),(1009,'13 June 2012','Arena Lviv','DEN','POR'),(1010,'13 June 2012','Metalist Stadium','NED','GER'),(1011,'17 June 2012','Metalist Stadium','POR','NED'),(1012,'17 June 2012','Arena Lviv','DEN','GER'),(1013,'10 June 2012','PGE Arena Gdansk','ESP','ITA'),(1014,'10 June 2012','Stadion Miejski (Poznan)','IRL','CRO'),(1015,'14 June 2012','Stadion Miejski (Poznan)','ITA','CRO'),(1016,'14 June 2012','PGE Arena Gdansk','ESP','IRL'),(1017,'18 June 2012','PGE Arena Gdansk','CRO','ESP'),(1018,'18 June 2012','Stadion Miejski (Poznan)','ITA','IRL'),(1019,'11 June 2012','Donbass Arena','FRA','ENG'),(1020,'11 June 2012','Olimpiyskiy National Sports Complex','UKR','SWE'),(1021,'15 June 2012','Donbass Arena','UKR','FRA'),(1022,'15 June 2012','Olimpiyskiy National Sports Complex','SWE','ENG'),(1023,'19 June 2012','Donbass Arena','ENG','UKR'),(1024,'19 June 2012','Olimpiyskiy National Sports Complex','SWE','FRA'),(1025,'21 June 2012','National Stadium, Warsaw','CZE','POR'),(1026,'22 June 2012','PGE Arena Gdansk','GER','GRE'),(1027,'23 June 2012','Donbass Arena','ESP','FRA'),(1028,'24 June 2012','Olimpiyskiy National Sports Complex','ENG','ITA'),(1029,'27 June 2012','Donbass Arena','POR','ESP'),(1030,'28 June 2012','National Stadium, Warsaw','GER','ITA'),(1031,'1 July 2012','Olimpiyskiy National Sports Complex','ESP','ITA ');
 

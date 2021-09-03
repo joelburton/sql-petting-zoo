@@ -193,5 +193,4 @@ questions:
     solution: |
       SELECT name 
         FROM world
-        GROUP BY name
-        HAVING LEN(name) = 4
+      WHERE name LIKE '____';
