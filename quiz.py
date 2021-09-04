@@ -33,8 +33,6 @@ class Quiz:
     schema: str = ""
     closed: bool = False
 
-    _expected_attached: bool = False
-
     @classmethod
     def load_all(cls, dir_path: str) -> Dict[str: Quiz]:
         """Get all quizzes in directory and return {id: quiz}."""
@@ -64,15 +62,12 @@ class Quiz:
         # quizzes do not have this.
 
         if not self.closed:
-            with psycopg2.connect(DATABASE_URL) as conn:
-                with conn.cursor() as cur:
-                    for question in self.questions.values():
-                        cur.execute(question['solution'])
-                        cols = [c.name for c in cur.description]
-                        rows = cur.fetchall()
-                        question['expected'] = {"cols": cols, "rows": rows}
-
-        self._expected_attached = True
+            with psycopg2.connect(DATABASE_URL) as conn, conn.cursor() as cur:
+                for question in self.questions.values():
+                    cur.execute(question['solution'])
+                    cols = [c.name for c in cur.description]
+                    rows = cur.fetchall()
+                    question['expected'] = {"cols": cols, "rows": rows}
 
     def get_problems(self, id: str, output: Dict[str, list]) -> Any:
         """Compare student output to expected."""
