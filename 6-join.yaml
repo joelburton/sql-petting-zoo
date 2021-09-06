@@ -152,10 +152,10 @@ questions:
   all-matches-coached-by-fernando-santos:
     title: Information for all matches where Fernando Santos was the team1 coach.
     body: |
-      To JOIN game with eteam you could use either
-      game JOIN eteam ON (team1=eteam.id) or game JOIN eteam ON (team2=eteam.id)
+      To JOIN match with eteam you could use either
+      match JOIN eteam ON (team1=eteam.id) or match JOIN eteam ON (team2=eteam.id)
 
-      Notice that because id is a column name in both game and eteam you must 
+      Notice that because id is a column name in both match and eteam you must 
       specify eteam.id instead of just id
 
       List the dates of the matches and the name of the team in which 
@@ -171,7 +171,7 @@ questions:
   players-for-all-goals-scored-in-warsaw:
     title: List the players for every goal scored in National Stadium, Warsaw
     body: |
-      List the player for every goal scored in a game where the stadium was
+      List the player for every goal scored in a match where the stadium was
       'National Stadium, Warsaw'
     initial: |
 
@@ -195,11 +195,11 @@ questions:
       You can use DISTINCT to stop players being listed twice.
     initial: |
       SELECT player, gtime
-        FROM game JOIN goal ON matchid = id 
+        FROM match JOIN goal ON matchid = id 
       WHERE (team1='GER' AND team2='GRE');
     solution: |
       SELECT DISTINCT player
-        FROM game JOIN goal ON matchid = id
+        FROM match JOIN goal ON matchid = id
       WHERE goal.teamid != 'GER'
       AND (team1='GER' OR team2='GER');
   
@@ -227,7 +227,7 @@ questions:
 
     solution: |
       SELECT stadium, COUNT(*) as goals
-        FROM game JOIN goal ON id=matchid
+        FROM match JOIN goal ON id=matchid
       GROUP BY stadium
       ORDER BY stadium
   
@@ -238,11 +238,39 @@ questions:
       number of goals scored.
     initial: |
       SELECT matchid,mdate, team1, team2,teamid
-        FROM game JOIN goal ON matchid = id 
+        FROM match JOIN goal ON matchid = id 
       WHERE (team1 = 'POL' OR team2 = 'POL')
     solution: |
       SELECT matchid,mdate, COUNT(*) as goals
-        FROM game JOIN goal ON matchid = id 
+        FROM match JOIN goal ON matchid = id 
       WHERE (team1 = 'POL' OR team2 = 'POL')
       GROUP BY matchid, mdate
-    
+
+  info-on-all-matches-involving-poland:
+    title: List information, including goals scored, for all matches involving Poland
+    body: |
+      For every match involving 'POL', show the matchid, date and the 
+      number of goals scored.
+    initial: |
+      SELECT matchid,mdate, team1, team2,teamid
+        FROM match JOIN goal ON matchid = id 
+      WHERE (team1 = 'POL' OR team2 = 'POL')
+    solution: |
+      SELECT matchid,mdate, COUNT(*) as goals
+        FROM match JOIN goal ON matchid = id 
+      WHERE (team1 = 'POL' OR team2 = 'POL')
+      GROUP BY matchid, mdate
+
+  info-on-matches-and-goals-scored-by-germany:
+    title: List information on matches and goals scored by Germany
+    body: |
+      For every match where 'GER' scored, show matchid, match date 
+      and the number of goals scored by 'GER'
+    initial: |
+
+    solution: |
+      SELECT matchid, mdate, COUNT(*) as num_germany_goals
+        FROM game
+      JOIN goal ON matchid = id 
+      WHERE goal.teamid = 'GER'
+      GROUP BY matchid, mdate
