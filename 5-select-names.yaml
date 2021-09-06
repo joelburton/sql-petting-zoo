@@ -163,7 +163,7 @@ questions:
       SELECT name
         FROM world
         WHERE name LIKE '_t%'
-        ORDER BY name
+        ORDER BY name;
   
   countries-containing-separate-os:
     title: Countries containing two o characters separated by two other characters
@@ -194,3 +194,65 @@ questions:
       SELECT name 
         FROM world
       WHERE name LIKE '____';
+  
+  countries-with-same-name-as-capital:
+    title: Countries with the same name as their capital
+    body: |
+      The capital of Luxembourg is Luxembourg. Show all the countries where the 
+      capital is the same as the name of the country
+
+      Find the country where the name is the capital city.
+    initial: |
+      SELECT name, capital, continent
+        FROM world
+      WHERE name LIKE '%x%'
+    solution: |
+      SELECT name
+        FROM world
+      WHERE name = capital;
+  
+  countries-where-capital-includes-country-name-and-city:
+    title: Countries with the same name as their capital
+    body: |
+      The capital of Mexico is Mexico City. Show all the countries 
+      where the capital has the country together with the word "City".
+
+      Find the country where the capital is the country plus "City".
+    initial: |
+      SELECT name, concat(name, 'town')
+        FROM world
+      WHERE name LIKE '%ina%'
+    solution: |
+      SELECT name
+        FROM world
+      WHERE capital LIKE concat(name,' City');
+  
+  countries-where-capital-includes-country-name:
+    title: Countries whose capitals include the country name
+    body: |
+      Find the capital and the name where the capital includes the 
+      name of the country.
+
+    initial: |
+
+    solution: |
+      SELECT capital, name
+        FROM world
+      WHERE capital like concat('%', name, '%');
+  
+  countries-where-capital-is-extension-of-country-name:
+    title: Countries whose capitals are extensions of the country name
+    body: |
+      Find the capital and the name where the capital is an extension of name 
+      of the country.
+
+      You should include Mexico City as it is longer than Mexico. You should 
+      not include Luxembourg as the capital is the same as the country.
+
+    initial: |
+      
+    solution: |
+      SELECT capital, name
+        FROM world
+      WHERE capital like concat (name, '%')
+      AND capital != name;
