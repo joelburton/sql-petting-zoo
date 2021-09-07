@@ -4,7 +4,6 @@ description: |
   This tutorial uses the LIKE operator to check names. We will be using
    the SELECT command on the table world.
 
-
 schema: |
   ##### The `world` table
 
@@ -193,7 +192,7 @@ questions:
     solution: |
       SELECT name 
         FROM world
-      WHERE name LIKE '____';
+        WHERE name LIKE '____';
   
   countries-with-same-name-as-capital:
     title: Countries with the same name as their capital
@@ -205,11 +204,11 @@ questions:
     initial: |
       SELECT name, capital, continent
         FROM world
-      WHERE name LIKE '%x%'
+        WHERE name LIKE '%x%'
     solution: |
       SELECT name
         FROM world
-      WHERE name = capital;
+        WHERE name = capital;
   
   countries-where-capital-includes-country-name-and-city:
     title: Countries with the same name as their capital
@@ -221,11 +220,11 @@ questions:
     initial: |
       SELECT name, concat(name, 'town')
         FROM world
-      WHERE name LIKE '%ina%'
+        WHERE name LIKE '%ina%'
     solution: |
       SELECT name
         FROM world
-      WHERE capital LIKE concat(name,' City');
+        WHERE capital LIKE concat(name,' City');
   
   countries-where-capital-includes-country-name:
     title: Countries whose capitals include the country name
@@ -238,7 +237,7 @@ questions:
     solution: |
       SELECT capital, name
         FROM world
-      WHERE capital like concat('%', name, '%');
+        WHERE capital like concat('%', name, '%');
   
   countries-where-capital-is-extension-of-country-name:
     title: Countries whose capitals are extensions of the country name
@@ -254,5 +253,5 @@ questions:
     solution: |
       SELECT capital, name
         FROM world
-      WHERE capital like concat (name, '%')
-      AND capital != name;
+        WHERE capital like concat (name, '%')
+        AND capital != name;
