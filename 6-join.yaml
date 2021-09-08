@@ -1,7 +1,7 @@
 id: join
 title: JOIN
 description: |
-  This tutorial introduces JOIN which allows you to use data from two or more 
+  This tutorial introduces JOIN, which allows you to use data from two or more 
   tables. The tables contain all matches and goals from UEFA EURO 2012 Football 
   Championship in Poland and Ukraine.
 
@@ -41,7 +41,7 @@ schema: |
   - Indexes:
     - "matchid, gtime" PRIMARY KEY
     - "matchid" FOREIGN KEY, match
-    - "eteam" FOREIGN KEY, eteam
+    - "teamid" FOREIGN KEY, eteam
 
   ###### Sample data
 

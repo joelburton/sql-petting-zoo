@@ -140,7 +140,7 @@ questions:
   titanic-cast:
     title: Cast list for the movie 'Titanic'
     body: |
-      Obtain the cast list for 'Casablanca'.
+      Obtain the cast list for 'Titanic'.
       
       The cast list is the names of the actors who were in the movie.
       
@@ -288,7 +288,7 @@ questions:
         JOIN roles on movies.id = roles.movie_id
         JOIN stars on roles.star_id = stars.id
         WHERE roles.lead_role = 'true'
-        GROUP BY stars.first_name, stars.last_name
+        GROUP BY actor
         HAVING COUNT(movies.title) >= 2
         ORDER BY actor asc;
   
