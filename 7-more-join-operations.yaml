@@ -283,14 +283,15 @@ questions:
     initial: |
 
     solution: |
-      SELECT distinct concat(stars.first_name, ' ', stars.last_name) as actor
+      SELECT 
+        distinct concat(stars.first_name, ' ', stars.last_name) as actor
         FROM movies
         JOIN roles on movies.id = roles.movie_id
         JOIN stars on roles.star_id = stars.id
         WHERE roles.lead_role = 'true'
         GROUP BY actor
         HAVING COUNT(movies.title) >= 2
-        ORDER BY actor asc;
+        ORDER BY actor;
   
   films-released-in-2001-ordered-by-num-actors:
     title: Films released in 2001, ordered by number of actors
@@ -302,12 +303,12 @@ questions:
 
     solution: |
       SELECT title, 
-        count(roles.star_id)
+        count(roles.star_id) as num_actors
         FROM movies
         JOIN roles on movies.id = roles.movie_id
         WHERE movies.release_year = 2001
         GROUP BY title
-        ORDER BY COUNT(roles.star_id) desc, title;
+        ORDER BY num_actors desc, title;
   
   actors-who-worked-with-zoe-saldana:
     title: All actors who have worked with Zoe Saldana
