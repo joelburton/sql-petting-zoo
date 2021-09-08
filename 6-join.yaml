@@ -132,9 +132,13 @@ questions:
         FROM match
         JOIN goal ON (id=matchid)
     solution: |
-      SELECT player, teamid, stadium, mdate
+      SELECT 
+            goal.player,
+            goal.teamid,
+            match.stadium,
+            match.mdate
         FROM match
-        JOIN goal ON (id=matchid)
+        JOIN goal ON (match.id = goal.matchid)
         WHERE goal.teamid = 'GER';
   
   mario-goals-via-join:
@@ -148,10 +152,10 @@ questions:
 
 
     solution: |
-      SELECT team1, team2, player
+      SELECT match.team1, match.team2, goal.player
         FROM match
-        JOIN goal ON (id=matchid)
-        WHERE player LIKE 'Mario%';
+        JOIN goal ON (match.id = goal.matchid)
+        WHERE goal.player LIKE 'Mario%';
   
   goals-in-first-ten:
     title: Information for all goals scored within the first ten minutes
@@ -165,10 +169,14 @@ questions:
         FROM goal 
         WHERE gtime<=10
     solution: |
-      SELECT player, teamid, coach, gtime
+      SELECT 
+            goal.player,
+            goal.teamid,
+            eteam.coach,
+            goal.gtime
         FROM goal
-        JOIN eteam ON (teamid=id)
-        WHERE gtime<=10;
+        JOIN eteam ON (goal.teamid = eteam.id)
+        WHERE goal.gtime<=10;
   
   all-matches-coached-by-fernando-santos:
     title: Information for all matches where Fernando Santos was the team1 coach.
@@ -184,9 +192,9 @@ questions:
     initial: |
 
     solution: |
-      SELECT mdate, teamname
+      SELECT match.mdate, eteam.teamname
         FROM match
-        JOIN eteam on match.team1=eteam.id
+        JOIN eteam on match.team1 = eteam.id
         WHERE eteam.coach = 'Fernando Santos';
   
   players-for-all-goals-scored-in-warsaw:
@@ -197,9 +205,9 @@ questions:
     initial: |
 
     solution: |
-      SELECT player
+      SELECT goal.player
         FROM match
-        JOIN goal on match.id=goal.matchid
+        JOIN goal on match.id = goal.matchid
         WHERE match.stadium = 'National Stadium, Warsaw';
 
   all-players-who-scored-against-germany:
@@ -219,8 +227,9 @@ questions:
         FROM match JOIN goal ON matchid = id 
         WHERE (team1='GER' AND team2='GRE');
     solution: |
-      SELECT DISTINCT player
-        FROM match JOIN goal ON matchid = id
+      SELECT DISTINCT goal.player
+        FROM match 
+        JOIN goal ON goal.matchid = match.id
         WHERE goal.teamid != 'GER'
         AND (team1='GER' OR team2='GER');
   
@@ -235,8 +244,9 @@ questions:
         FROM eteam JOIN goal ON id=teamid
         ORDER BY teamname
     solution: |
-      SELECT teamname, COUNT(*) as goals
-        FROM eteam JOIN goal ON id=teamid
+      SELECT eteam.teamname, COUNT(*) as goals
+        FROM eteam 
+        JOIN goal ON eteam.id = goal.teamid
         GROUP BY teamname
         ORDER BY teamname;
   
@@ -248,7 +258,7 @@ questions:
 
     solution: |
       SELECT stadium, COUNT(*) as goals
-        FROM match JOIN goal ON id=matchid
+        FROM match JOIN goal ON match.id = goal.matchid
         GROUP BY stadium
         ORDER BY stadium;
   
@@ -258,27 +268,13 @@ questions:
       For every match involving 'POL', show the matchid, date and the 
       number of goals scored.
     initial: |
-      SELECT matchid,mdate, team1, team2,teamid
+      SELECT matchid, mdate, team1, team2, teamid
         FROM match JOIN goal ON matchid = id 
         WHERE (team1 = 'POL' OR team2 = 'POL')
     solution: |
-      SELECT matchid,mdate, COUNT(*) as goals
-        FROM match JOIN goal ON matchid = id 
-        WHERE (team1 = 'POL' OR team2 = 'POL')
-        GROUP BY matchid, mdate;
-
-  info-on-all-matches-involving-poland:
-    title: List information, including goals scored, for all matches involving Poland
-    body: |
-      For every match involving 'POL', show the matchid, date and the 
-      number of goals scored.
-    initial: |
-      SELECT matchid,mdate, team1, team2,teamid
-        FROM match JOIN goal ON matchid = id 
-        WHERE (team1 = 'POL' OR team2 = 'POL')
-    solution: |
-      SELECT matchid,mdate, COUNT(*) as goals
-        FROM match JOIN goal ON matchid = id 
+      SELECT matchid, mdate, COUNT(*) as goals
+        FROM match 
+        JOIN goal ON goal.matchid = match.id 
         WHERE (team1 = 'POL' OR team2 = 'POL')
         GROUP BY matchid, mdate;
 
@@ -292,7 +288,7 @@ questions:
     solution: |
       SELECT matchid, mdate, COUNT(*) as num_germany_goals
         FROM match
-        JOIN goal ON matchid = id 
+        JOIN goal ON goal.matchid = match.id 
         WHERE goal.teamid = 'GER'
         GROUP BY matchid, mdate;
   
@@ -302,7 +298,8 @@ questions:
 
       List every match with the goals scored by each team as shown. 
       This will use "CASE WHEN" which has not been explained in any previous exercises.
-      
+  
+      |
       | mdate        | team1  | score1 | team2   | score2   |
       | ------------ | ------ | ------ | ------- | -------- |
       | 1 July 2012  | ESP    | 4      | ITA     | 0        |
@@ -325,9 +322,9 @@ questions:
       SELECT 
         mdate,
         team1,
-        SUM(CASE WHEN teamid=team1 THEN 1 ELSE 0 END) as score1,
+        SUM(CASE WHEN teamid = team1 THEN 1 ELSE 0 END) as score1,
         team2,
-        SUM(CASE WHEN teamid=team2 THEN 1 ELSE 0 END) as score2
+        SUM(CASE WHEN teamid = team2 THEN 1 ELSE 0 END) as score2
         FROM match 
-        LEFT JOIN goal ON matchid = id
+        LEFT JOIN goal ON goal.matchid = match.id
         GROUP BY mdate, matchid, team1, team2;
