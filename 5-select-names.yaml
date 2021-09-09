@@ -1,8 +1,8 @@
 id: names
 title: SELECT names
 description: |
-  This tutorial uses the LIKE operator to check names. We will be using
-   the SELECT command on the table world.
+  This tutorial uses the `LIKE` operator to check names. We will be using
+  the SELECT command on the table world.
 
 schema: |
   ##### The `world` table
@@ -42,8 +42,8 @@ questions:
     body: |
       Find the country that starts with Y
 
-      You can use WHERE name LIKE 'B%' to find the countries that start with "B".
-      The % is a wild-card that can match any number of characters.
+      You can use `WHERE name LIKE 'B%'` to find the countries that start with "B".
+      The `%` is a wildcard that can match any number of characters.
     initial: |
       SELECT name
         FROM world
@@ -56,7 +56,7 @@ questions:
   countries-ending-with-y:
     title: Countries ending with Y
     body: |
-      Find the countries that end with 'Y'
+      Find the countries that end with 'y'
   
     initial: |
       SELECT name
@@ -65,27 +65,27 @@ questions:
     solution: |
       SELECT name
         FROM world
-        WHERE name LIKE '%y';
+        WHERE name ILIKE '%y';
   
   countries-containing-x:
-    title: Countries containing X
+    title: Countries containing "x"
     body: |
-      Luxembourg has an x - so does one other country. List them both.
+      Luxembourg has an x --- so does one other country. List them both.
 
       Find the countries that contain the letter 'x'
     initial: |
       SELECT name
         FROM world
-        WHERE name LIKE 'T%';
+        WHERE name ILIKE 'T%';
     solution: |
       SELECT name
         FROM world
-        WHERE name LIKE '%x%';
+        WHERE name ILIKE '%x%';
   
   countries-ending-with-land:
     title: Countries ending with land
     body: |
-      Iceland, Switzerland end with land - but are there others?
+      Iceland, Switzerland end with "land" --- but are there others?
 
       Find the countries that end with 'land'
     initial: |
@@ -100,7 +100,7 @@ questions:
   countries-starting-with-C-ending-with-ia:
     title: Countries starting with a C and ending with -ia
     body: |
-      Columbia starts with a C and ends with ia - there are two more like this.
+      Columbia starts with a "C" and ends with "ia" --- there are two more like this.
 
       Find the countries that start with 'C' and end with 'ia'
     initial: |
@@ -115,7 +115,7 @@ questions:
   countries-containing-double-os:
     title: Countries containing oo
     body: |
-      Greece has a double e - who has a double o?
+      Greece has a double "e" --- which country has a double "o"?
 
       Find the country that has 'oo' in the name
     initial: |
@@ -128,9 +128,9 @@ questions:
         WHERE name LIKE '%oo%';
 
   countries-containing-three-as:
-    title: Countries containing at least three as
+    title: Countries containing at least three "a"s
     body: |
-      Bahamas has three a - who else?
+      Bahamas has three "a"s --- which other countries do?
       
       Find the countries that have three or more 'a's in the name
     initial: |
@@ -165,9 +165,9 @@ questions:
         ORDER BY name;
   
   countries-containing-separate-os:
-    title: Countries containing two o characters separated by two other characters
+    title: Countries containing two "o" characters separated by two other characters
     body: |
-      Lesotho and Moldova both have two o characters separated by two other characters.
+      Lesotho and Moldova both have two "o" characters separated by two other characters.
 
       Find the countries that have two 'o' characters separated by two others.
     initial: |
@@ -190,9 +190,15 @@ questions:
         FROM world
         WHERE name LIKE 'Cu%';
     solution: |
-      SELECT name 
+      SELECT name
         FROM world
-        WHERE name LIKE '____';
+        WHERE LENGTH(name) = 4;
+
+      -- another way:
+      --
+      -- SELECT name
+      --  FROM world
+      --  WHERE name LIKE '____';
   
   countries-with-same-name-as-capital:
     title: Countries with the same name as their capital
@@ -218,13 +224,13 @@ questions:
 
       Find the country where the capital is the country plus 'City'.
     initial: |
-      SELECT name, concat(name, 'town')
+      SELECT name, name || 'town'
         FROM world
         WHERE name LIKE '%ina%'
     solution: |
       SELECT name
         FROM world
-        WHERE capital LIKE concat(name,' City');
+        WHERE capital LIKE name || ' City';
   
   countries-where-capital-includes-country-name:
     title: Countries whose capitals include the country name
@@ -237,7 +243,7 @@ questions:
     solution: |
       SELECT capital, name
         FROM world
-        WHERE capital like concat('%', name, '%');
+        WHERE capital LIKE '%' || name || '%';
   
   countries-where-capital-is-extension-of-country-name:
     title: Countries whose capitals are extensions of the country name
@@ -253,13 +259,19 @@ questions:
     solution: |
       SELECT capital, name
         FROM world
-        WHERE capital like concat (name, '%')
-        AND capital != name;
-  
+        WHERE capital LIKE name || '%'
+        AND capital <> name;
+
+      -- another strategy:
+      --
+      -- SELECT capital, name
+      --   FROM world
+      --   WHERE capital LIKE name || '_%';
+
   show-country-extensions:
     title: Extract extensions from capitals
     body: |
-      For Monaco-Ville, the name is Monaco and the extension is -Ville.
+      For Monaco-Ville, the name is Monaco and the extension is "-Ville".
 
       Show the name and the extension where the capital is an extension 
       of name of the country.
@@ -270,6 +282,6 @@ questions:
 
     solution: |
       SELECT name, 
-        REPLACE(capital, name, '') AS extension
+        REPLACE (capital, name, '') AS extension
         FROM world 
-        WHERE capital LIKE CONCAT(name, '_%');
+        WHERE capital LIKE name || '_%';

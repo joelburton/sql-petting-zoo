@@ -47,10 +47,10 @@ schema: |
 
   | matchid  | teamid   | player                     | gtime |
   | ---------| -------  | -------------------------  | ------|
-  | 1001     | POL      | Robert Lewandowski	       | 17    |
+  | 1001     | POL      | Robert Lewandowski	     | 17    |
   | 1001     | GRE      | Dimitris Salpingidis       | 51    |
   | 1002     | RUS      | Alan Dzagoev	             | 15    |
-  | 1002     | RUS      | Roman Pavlyuchenko	       | 82    |
+  | 1002     | RUS      | Roman Pavlyuchenko	     | 82    |
 
   ##### The `eteam` table
 
@@ -77,11 +77,12 @@ questions:
   goals-scored-by-germany:
     title: Goals scored by Germany
     body: |
-      The first example shows the goal scored by a player with the last name 'Bender'. 
-      The * says to list all the columns in the table - a shorter way of saying matchid, teamid, player, gtime
+      The first example shows the goal scored by a player with the last name
+      'Bender'. The `*` says to list all the columns in the table --- a shorter
+      way of saying `matchid, teamid, player, gtime`.
 
       Modify it to show the matchid and player name for all goals scored by Germany. 
-      To identify German players, check for: teamid = 'GER'
+      To identify German players, check for: `teamid = 'GER'`
     initial: |
       SELECT *
         FROM goal
@@ -97,11 +98,11 @@ questions:
       From the previous query you can see that Lars Bender's scored a goal in match 1012. 
       Now we want to know what teams were playing in that match.
 
-      Notice in the that the column matchid in the goal table corresponds to the id
-      column in the match table. We can look up information about match 1012 by finding
+      Notice in the that the column `matchid` in the `goal` table corresponds to the `id`
+      column in the `match` table. We can look up information about match 1012 by finding
       that row in the match table.
 
-      Show id, stadium, team1, team2 for just match 1012
+      Show id, stadium, team1, team2 for just match 1012.
     initial: |
       SELECT id, stadium, team1, team2
         FROM match
@@ -114,23 +115,27 @@ questions:
     title: Information on all German goals
     body: |
       You can combine the two steps into a single query with a JOIN.
-      
-        SELECT *
-          FROM match
-        JOIN goal ON (id=matchid)
-      
-      The FROM clause says to merge data from the goal table with that from the match table. 
-      The ON says how to figure out which rows in match go with which rows in goal - the matchid 
-      from goal must match id from match. (If we wanted to be more clear/specific we could say
-      ON (match.id=goal.matchid)
 
-      The code below shows the player (from the goal) and stadium name (from the match table) for every goal scored.
+      ```postgresql
+      SELECT *
+        FROM match
+        JOIN goal ON (id = matchid)
+      ```
+
+      The FROM clause says to merge data from the goal table with that from the
+      match table. The ON says how to figure out which rows in match go with
+      which rows in goal --- the matchid  from goal must match id from match.
+      (If we wanted to be more clear/specific we could say `ON
+      (match.id = goal.matchid)`.
+
+      The code below shows the player (from the goal) and stadium name (from
+      the match table) for every goal scored.
 
       Modify it to show the player, teamid, stadium and mdate for every German goal.
     initial: |
-      SELECT player,stadium
+      SELECT player, stadium
         FROM match
-        JOIN goal ON (id=matchid)
+        JOIN goal ON (id = matchid)
     solution: |
       SELECT 
             goal.player,
@@ -147,10 +152,7 @@ questions:
       Use the same JOIN as in the previous question.
 
       Show the team1, team2 and player for every goal scored by a player
-      called Mario player LIKE 'Mario%'
-    initial: |
-
-
+      whose first name is Mario.
     solution: |
       SELECT match.team1, match.team2, goal.player
         FROM match
@@ -161,13 +163,15 @@ questions:
     title: Information for all goals scored within the first ten minutes
     body: |
       The table eteam gives details of every national team including the coach. 
-      You can JOIN goal to eteam using the phrase goal JOIN eteam on teamid=id
+      You can JOIN goal to eteam using the phrase goal
+      `JOIN eteam on teamid = id`
 
-      Show player, teamid, coach, gtime for all goals scored in the first 10 minutes gtime<=10
+      Show player, teamid, coach, gtime for all goals scored in the first 10
+      minutes.
     initial: |
       SELECT player, teamid, gtime
         FROM goal 
-        WHERE gtime<=10
+        WHERE gtime <= 10
     solution: |
       SELECT 
             goal.player,
@@ -176,25 +180,23 @@ questions:
             goal.gtime
         FROM goal
         JOIN eteam ON (goal.teamid = eteam.id)
-        WHERE goal.gtime<=10;
+        WHERE goal.gtime <= 10;
   
   all-matches-coached-by-fernando-santos:
     title: Information for all matches where Fernando Santos was the team1 coach.
     body: |
-      To JOIN match with eteam you could use either
-      match JOIN eteam ON (team1=eteam.id) or match JOIN eteam ON (team2=eteam.id)
+      To JOIN match with eteam you could use either match `JOIN eteam
+      ON (team1=eteam.id)` or match `JOIN eteam ON (team2=eteam.id)`
 
       Notice that because id is a column name in both match and eteam you must 
-      specify eteam.id instead of just id
+      specify `eteam.id` instead of just `id`.
 
       List the dates of the matches and the name of the team in which 
       'Fernando Santos' was the team1 coach.
-    initial: |
-
     solution: |
       SELECT match.mdate, eteam.teamname
         FROM match
-        JOIN eteam on match.team1 = eteam.id
+          JOIN eteam on match.team1 = eteam.id
         WHERE eteam.coach = 'Fernando Santos';
   
   players-for-all-goals-scored-in-warsaw:
@@ -207,7 +209,7 @@ questions:
     solution: |
       SELECT goal.player
         FROM match
-        JOIN goal on match.id = goal.matchid
+          JOIN goal on match.id = goal.matchid
         WHERE match.stadium = 'National Stadium, Warsaw';
 
   all-players-who-scored-against-germany:
@@ -219,17 +221,17 @@ questions:
       Select goals scored only by non-German players in matches where GER was the
       id of either team1 or team2.
 
-      You can use teamid!='GER' to prevent listing German players.
+      You can use `teamid <> 'GER'` to prevent listing German players.
 
       You can use DISTINCT to stop players being listed twice.
     initial: |
       SELECT player, gtime
         FROM match JOIN goal ON matchid = id 
-        WHERE (team1='GER' AND team2='GRE');
+        WHERE (team1 = 'GER' AND team2 = 'GRE');
     solution: |
       SELECT DISTINCT goal.player
         FROM match 
-        JOIN goal ON goal.matchid = match.id
+          JOIN goal ON goal.matchid = match.id
         WHERE goal.teamid != 'GER'
         AND (team1='GER' OR team2='GER');
   
@@ -238,7 +240,7 @@ questions:
     body: |
       Show teamname and the total number of goals scored.
     hint: 
-      You should COUNT(*) in the SELECT line and GROUP BY teamname
+      You should `COUNT(*)` in the `SELECT` line and `GROUP BY teamname`.
     initial: |
       SELECT teamname, player
         FROM eteam JOIN goal ON id=teamid
@@ -254,8 +256,6 @@ questions:
     title: List the number of goals scored in each stadium, aggregate
     body: |
       Show the stadium and the number of goals scored in each stadium.
-    initial: |
-
     solution: |
       SELECT stadium, COUNT(*) as goals
         FROM match JOIN goal ON match.id = goal.matchid
@@ -283,8 +283,6 @@ questions:
     body: |
       For every match where 'GER' scored, show matchid, match date 
       and the number of goals scored by 'GER'
-    initial: |
-
     solution: |
       SELECT matchid, mdate, COUNT(*) as num_germany_goals
         FROM match
@@ -295,36 +293,36 @@ questions:
   all-matches-and-goals-per-team:
     title: List information on matches and goals scored by all teams
     body: |
-
       List every match with the goals scored by each team as shown. 
-      This will use "CASE WHEN" which has not been explained in any previous exercises.
-  
+      This will use `CASE WHEN` which has not been explained in any previous
+      exercises.
 
+      ```
       | mdate        | team1  | score1 | team2   | score2   |
       | ------------ | ------ | ------ | ------- | -------- |
       | 1 July 2012  | ESP    | 4      | ITA     | 0        |
       | 10 June 2012 | ESP    | 1      | ITA     | 1        |
       | 10 June 2012 | IRL    | 1      | CRO     | 3        |
-
+      ```
 
       Notice in the query given every goal is listed. If it was a team1 goal 
-      then a 1 appears in score1, otherwise there is a 0. You could SUM this column to get a count of the goals scored by team1. Sort your result by mdate, matchid, team1 and team2.
-
+      then a 1 appears in score1, otherwise there is a 0. You could `SUM` this
+      column to get a count of the goals scored by team1. Sort your result by
+      mdate, matchid, team1 and team2.
     initial: |
       SELECT 
         mdate,
         team1,
-        CASE WHEN teamid=team1 THEN 1 ELSE 0 END score1
+        CASE WHEN teamid = team1 THEN 1 ELSE 0 END AS score1
         FROM match
         JOIN goal ON matchid = id
-
     solution: |
       SELECT 
         mdate,
         team1,
-        SUM(CASE WHEN teamid = team1 THEN 1 ELSE 0 END) as score1,
+        SUM(CASE WHEN teamid = team1 THEN 1 ELSE 0 END) AS score1,
         team2,
-        SUM(CASE WHEN teamid = team2 THEN 1 ELSE 0 END) as score2
+        SUM(CASE WHEN teamid = team2 THEN 1 ELSE 0 END) AS score2
         FROM match 
-        LEFT JOIN goal ON goal.matchid = match.id
+          LEFT JOIN goal ON goal.matchid = match.id
         GROUP BY mdate, matchid, team1, team2;
