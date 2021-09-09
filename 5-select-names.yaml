@@ -1,0 +1,287 @@
+id: names
+title: SELECT names
+description: |
+  This tutorial uses the `LIKE` operator to check names. We will be using
+  the SELECT command on the table world.
+
+schema: |
+  ##### The `world` table
+
+  | Column      | Type         | Nullable | Notes                   |
+  | ----------- | ------------ | -------- | ----------------------- |
+  | name        | varchar(50)  | not null | English name of country |
+  | region      | varchar(60)  |          |                         |
+  | area        | bigint       |          |                         |
+  | population  | bigint       |          |                         |
+  | gdp         | bigint       |          |                         |
+  | capital     | varchar(60)  |          |                         |
+
+  - Indexes:
+    - "world_pkey" PRIMARY KEY, btree (name)
+    - "world_region_idx" btree (region)
+
+  ###### Sample data
+
+  | name        | region | area   | population | gdp         | capital |
+  | ----------- | ------ | ------ | ---------- | ----------- | ------- |
+  | Afghanistan | Asia   | 652230 | 25500100   | 20364000000 | Kabul   |
+  | Zimbabwe    | Africa | 390757 | 13061239   | 9802000000  | Harare  |
+
+  ##### Footnotes
+
+  ###### Per Capita GDP
+  The per capita GDP is the GDP divided by the population. It is a rough measure
+   of the average salary. A rich country is one with a high per capita GDP.
+
+  ###### Area
+  The area is measured in square kilometers.
+questions:
+
+  countries-starting-with-y:
+    title: Countries starting with Y
+    body: |
+      Find the country that starts with Y
+
+      You can use `WHERE name LIKE 'B%'` to find the countries that start with "B".
+      The `%` is a wildcard that can match any number of characters.
+    initial: |
+      SELECT name
+        FROM world
+        WHERE name LIKE 'F%';
+    solution: |
+      SELECT name
+        FROM world
+        WHERE name LIKE 'Y%';
+  
+  countries-ending-with-y:
+    title: Countries ending with Y
+    body: |
+      Find the countries that end with 'y'
+  
+    initial: |
+      SELECT name
+        FROM world
+        WHERE name LIKE 'T%';
+    solution: |
+      SELECT name
+        FROM world
+        WHERE name ILIKE '%y';
+  
+  countries-containing-x:
+    title: Countries containing "x"
+    body: |
+      Luxembourg has an x --- so does one other country. List them both.
+
+      Find the countries that contain the letter 'x'
+    initial: |
+      SELECT name
+        FROM world
+        WHERE name ILIKE 'T%';
+    solution: |
+      SELECT name
+        FROM world
+        WHERE name ILIKE '%x%';
+  
+  countries-ending-with-land:
+    title: Countries ending with land
+    body: |
+      Iceland, Switzerland end with "land" --- but are there others?
+
+      Find the countries that end with 'land'
+    initial: |
+      SELECT name
+        FROM world
+        WHERE name LIKE 'T%';
+    solution: |
+      SELECT name
+        FROM world
+        WHERE name LIKE '%land';
+  
+  countries-starting-with-C-ending-with-ia:
+    title: Countries starting with a C and ending with -ia
+    body: |
+      Columbia starts with a "C" and ends with "ia" --- there are two more like this.
+
+      Find the countries that start with 'C' and end with 'ia'
+    initial: |
+      SELECT name
+        FROM world
+        WHERE name LIKE 'T%';
+    solution: |
+      SELECT name
+        FROM world
+        WHERE name LIKE 'C%ia';
+
+  countries-containing-double-os:
+    title: Countries containing oo
+    body: |
+      Greece has a double "e" --- which country has a double "o"?
+
+      Find the country that has 'oo' in the name
+    initial: |
+      SELECT name
+        FROM world
+        WHERE name LIKE '%ee%';
+    solution: |
+      SELECT name
+        FROM world
+        WHERE name LIKE '%oo%';
+
+  countries-containing-three-as:
+    title: Countries containing at least three "a"s
+    body: |
+      Bahamas has three "a"s --- which other countries do?
+      
+      Find the countries that have three or more 'a's in the name
+    initial: |
+      SELECT name
+        FROM world
+        WHERE name LIKE 'T%';
+    solution: |
+      SELECT name
+        FROM world
+        WHERE name LIKE '%a%a%a%';
+  
+  countries-containing-second-char-t:
+    title: Countries containing t as second char
+    body: |
+      India and Angola have an n as the second character. You can use the 
+      underscore as a single character wildcard.
+
+        SELECT name FROM world
+        WHERE name LIKE '_n%'
+        ORDER BY name
+      
+      Find the countries that have 't' as the second character.
+    initial: |
+      SELECT name
+        FROM world
+        WHERE name LIKE '_n%'
+        ORDER BY name
+    solution: |
+      SELECT name
+        FROM world
+        WHERE name LIKE '_t%'
+        ORDER BY name;
+  
+  countries-containing-separate-os:
+    title: Countries containing two "o" characters separated by two other characters
+    body: |
+      Lesotho and Moldova both have two "o" characters separated by two other characters.
+
+      Find the countries that have two 'o' characters separated by two others.
+    initial: |
+      SELECT name
+        FROM world
+        WHERE name LIKE '_n%';
+    solution: |
+      SELECT name
+        FROM world
+        WHERE name LIKE '%o__o%';
+  
+  countries-with-four-chars:
+    title: Countries with four-character names
+    body: |
+      Cuba and Togo have four characters names.
+
+      Find the countries that have exactly four characters.
+    initial: |
+      SELECT name
+        FROM world
+        WHERE name LIKE 'Cu%';
+    solution: |
+      SELECT name
+        FROM world
+        WHERE LENGTH(name) = 4;
+
+      -- another way:
+      --
+      -- SELECT name
+      --  FROM world
+      --  WHERE name LIKE '____';
+  
+  countries-with-same-name-as-capital:
+    title: Countries with the same name as their capital
+    body: |
+      The capital of Luxembourg is Luxembourg. Show all the countries where the 
+      capital is the same as the name of the country
+
+      Find the country where the name is the capital city.
+    initial: |
+      SELECT name, capital, continent
+        FROM world
+        WHERE name LIKE '%x%'
+    solution: |
+      SELECT name
+        FROM world
+        WHERE name = capital;
+  
+  countries-where-capital-includes-country-name-and-city:
+    title: Countries with the same name as their capital
+    body: |
+      The capital of Mexico is Mexico City. Show all the countries 
+      where the capital has the country together with the word 'City'.
+
+      Find the country where the capital is the country plus 'City'.
+    initial: |
+      SELECT name, name || 'town'
+        FROM world
+        WHERE name LIKE '%ina%'
+    solution: |
+      SELECT name
+        FROM world
+        WHERE capital LIKE name || ' City';
+  
+  countries-where-capital-includes-country-name:
+    title: Countries whose capitals include the country name
+    body: |
+      Find the capital and the name where the capital includes the 
+      name of the country.
+
+    initial: |
+
+    solution: |
+      SELECT capital, name
+        FROM world
+        WHERE capital LIKE '%' || name || '%';
+  
+  countries-where-capital-is-extension-of-country-name:
+    title: Countries whose capitals are extensions of the country name
+    body: |
+      Find the capital and the name where the capital is an extension of name 
+      of the country.
+
+      You should include Mexico City as it is longer than Mexico. You should 
+      not include Luxembourg as the capital is the same as the country.
+
+    initial: |
+      
+    solution: |
+      SELECT capital, name
+        FROM world
+        WHERE capital LIKE name || '%'
+        AND capital <> name;
+
+      -- another strategy:
+      --
+      -- SELECT capital, name
+      --   FROM world
+      --   WHERE capital LIKE name || '_%';
+
+  show-country-extensions:
+    title: Extract extensions from capitals
+    body: |
+      For Monaco-Ville, the name is Monaco and the extension is "-Ville".
+
+      Show the name and the extension where the capital is an extension 
+      of name of the country.
+
+      You can use the SQL function REPLACE.
+    
+    initial: |
+
+    solution: |
+      SELECT name, 
+        REPLACE (capital, name, '') AS extension
+        FROM world 
+        WHERE capital LIKE name || '_%';

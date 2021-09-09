@@ -1,0 +1,296 @@
+id: more-join
+title: More JOIN operations
+description: |
+  This tutorial introduces the notion of a join. The database consists of three 
+  tables: movies, stars, and roles.
+
+schema: |
+  ##### The `movies` table
+
+  | Column       | Type         | Nullable | Notes                   |
+  | -----------  | ------------ | -------- | ----------------------- |
+  | id           | int          | not null |                         |
+  | title        | text         | not null |                         |
+  | release_year | int          | not null |                         |
+  | runtime      | int          | not null |                         |
+  | rating       | text         | not null |                         |
+
+  - Indexes:
+    - "id" PRIMARY KEY
+
+  ###### Sample data
+
+  | id  | title                 | release_year      | runtime | rating  |
+  | ----| --------------------- | ----------------- | ------- | ------  |
+  | 20  | The Lion King         | 1994              | 89      | G       |
+  | 7   | Black Panter          | 2018              | 140     | PG-13   |
+
+  ##### The `roles` table
+
+  | Column      | Type         | Nullable | Notes                   |
+  | ----------- | ------------ | -------- | ----------------------- |
+  | id          | int          | not null |                         |
+  | movie_id    | int          | not null |                         |
+  | star_id     | int          | not null |                         |
+  | lead_role   | boolean      | not null | default = 'false'       |
+
+  - Indexes:
+    - "id" PRIMARY KEY
+    - "movie_id" FOREIGN KEY, movie
+    - "star_id" FOREIGN KEY, stars
+
+  ###### Sample data
+
+  | id       | movie_id | star_id  | lead_role |
+  | ---------| -------  | -------- | --------- |
+  | 5        | 81       | 3        | false     |
+  | 6        | 85       | 3        | false     |
+  | 98       | 89       | 41       | true      |
+  | 99       | 32       | 43       | false     |
+
+  ##### The `stars` table
+
+  | Column      | Type         | Nullable | Notes                   |
+  | ----------- | ------------ | -------- | ----------------------- |
+  | id          | int          | not null |                         |
+  | first_name  | text         | not null |                         |
+  | last_name   | text         | not null |                         |
+  | birth_date  | date         | not null |                         |
+
+  - Indexes:
+    - "id" PRIMARY KEY
+
+  ###### Sample data
+
+  | id    | first_name     | last_name            | birth_date   |
+  | ------| -------------- | -------------------- | ------------ |
+  | 1     | Frances        | McDormand            | 1957-06-23   |
+  | 2     | Jim            | Carrey               | 1962-01-17   |
+  | 17    | Samuel         | Jackson              | 1948-12-21   |
+  | 21    | Mila           | Kunis                | 1983-08-14   |
+
+questions:
+  list-movies-from-2018:
+    title: 2018 Movies
+    body: |
+      List the films where the release_year is 2018 (show id and title).
+    initial: |
+      SELECT id, title
+        FROM movies
+        WHERE release_year=2018
+    solution: |
+      SELECT id, title
+        FROM movies
+        WHERE release_year=2018;
+  
+  wonder-woman-year:
+    title: When was Wonder Woman released?
+    body: |
+      Give the release year of 'Wonder Woman'.
+    solution: |
+      SELECT release_year
+        FROM movies
+        WHERE title='Wonder Woman';
+
+  star-wars-info:
+    title: Star Wars Movies
+    body: |
+      List all of the Star Wars movies, include the id, title and release_year
+      (all of these movies include the words Star Wars in the title). Order
+      results by year.
+    solution: |
+      SELECT id, title, release_year
+        FROM movies
+        WHERE title LIKE '%Star Wars%'
+        ORDER BY year;
+  
+  morgan-freeman-id:
+    title: ID for actor Morgan Freeman
+    body: |
+      What id number does the actor 'Morgan Freeman' have?
+    solution: |
+      SELECT id 
+        FROM stars 
+        WHERE first_name = 'Morgan' AND last_name = 'Freeman';
+  
+  titanic-id:
+    title: ID for the movie 'Titanic'
+    body: |
+      What is the id of the film 'Titanic'?
+    solution: |
+      SELECT id 
+        FROM movies
+        WHERE title = 'Titanic';
+  
+  titanic-cast:
+    title: Cast list for the movie 'Titanic'
+    body: |
+      Obtain the cast list for 'Titanic'.
+      
+      The cast list is the names of the actors who were in the movie.
+      
+      Use movie.id = X, where X is the value you received from the previous question
+    solution: |
+      SELECT stars.first_name, stars.last_name
+        FROM roles
+          JOIN stars on roles.star_id = stars.id
+        WHERE roles.movie_id = 3;
+  
+  shrek-cast:
+    title: Cast list for the movie 'Shrek'
+    body: |
+      Obtain the cast list for 'Shrek'.
+    solution: |
+      SELECT stars.first_name, stars.last_name
+        FROM movies
+          JOIN roles on movies.id = roles.movie_id
+          JOIN stars on roles.star_id = stars.id
+        WHERE movies.title = 'Shrek';
+  
+  viola-davis-movies:
+    title: Viola Davis movies
+    body: |
+      List the films in which Viola Davis has appeared
+    solution: |
+      SELECT movies.title
+        FROM movies
+          JOIN roles on movies.id = roles.movie_id
+          JOIN stars on roles.star_id = stars.id
+        WHERE stars.first_name = 'Viola'
+          AND stars.last_name = 'Davis';
+  
+  octavia-spencer-supporting-actress-movies:
+    title: Octavia Spencer as a supporting actress
+    body: |
+      List the films where Octavia Spencer has appeared - but not in the starring
+       role. [Note: the lead_role field of the roles table gives the position of 
+       the actor. If lead_role='true' then this actor is in the starring role]
+    solution: |
+      SELECT movies.title
+        FROM movies
+          JOIN roles on movies.id = roles.movie_id
+          JOIN stars on roles.star_id = stars.id
+        WHERE stars.first_name = 'Octavia'
+          AND stars.last_name = 'Spencer'
+          AND roles.lead_role = 'false';
+
+  lead-actors-in-2002-movies:
+    title: Lead actors in 2002 movies
+    body: |
+      List the films together with the leading star for all 2002 films.
+    solution: |
+      SELECT
+          movies.title,
+          stars.first_name,
+          stars.last_name
+        FROM movies
+          JOIN roles on movies.id = roles.movie_id
+          JOIN stars on roles.star_id = stars.id
+        WHERE movies.release_year = 2002
+          AND roles.lead_role = 'true';
+
+  busy-years-for-emma-watson:
+    title: Busy years for Emma Watson
+    body: |
+      Which were the busiest years for Emma Watson, show the year and the 
+      number of movies she made each year for any year in which she made at
+      least one movie.
+    initial: |
+      SELECT release_year, COUNT(title) 
+        FROM movies
+          JOIN roles ON movies.id = roles.movie_id
+          JOIN stars ON roles.star_id = stars.id
+        WHERE stars.first_name = 'Daniel'
+          AND stars.last_name = 'Radcliffe'
+        GROUP BY release_year
+        HAVING COUNT(title) > 1;
+    solution: |
+      SELECT release_year, COUNT(title) 
+        FROM movies
+          JOIN roles ON movies.id = roles.movie_id
+          JOIN stars ON roles.star_id=stars.id
+        WHERE stars.first_name = 'Emma'
+          AND stars.last_name = 'Watson'
+        GROUP BY release_year
+        HAVING COUNT(title) >= 1;
+  
+  lead-actors-in-daniel-radcliffe-movies:
+    title: Lead actors in Daniel Radcliffe movies
+    body: |
+      List the film title and the leading actor for all of the films
+      Daniel Radcliffe played in.
+    initial: |
+      SELECT movie_id
+        FROM roles
+        WHERE roles.star_id IN (
+          SELECT id FROM stars
+            WHERE first_name = 'Daniel'
+              AND last_name = 'Radcliffe')
+    solution: |
+      SELECT
+          movies.title,
+          stars.first_name,
+          stars.last_name
+        FROM movies
+        JOIN roles ON movies.id = roles.movie_id
+        JOIN stars ON roles.star_id = stars.id
+        WHERE lead_role = 'true'
+          AND roles.movie_id IN (
+            SELECT movie_id
+              FROM roles
+                JOIN stars ON stars.id = roles.star_id
+              WHERE stars.first_name = 'Daniel'
+              AND stars.last_name = 'Radcliffe');
+  
+  actors-with-at-least-2-leading-roles:
+    title: Actors with at least 2 leading roles
+    body: |
+      Obtain a list, in alphabetical order, of actors who've had at least
+       2 starring roles.
+    solution: |
+      SELECT 
+        DISTINCT first_name || ' ' || stars.last_name as actor
+        FROM movies
+          JOIN roles on movies.id = roles.movie_id
+          JOIN stars on roles.star_id = stars.id
+        WHERE roles.lead_role = 'true'
+        GROUP BY actor
+        HAVING COUNT(movies.title) >= 2
+        ORDER BY actor;
+  
+  films-released-in-2001-ordered-by-num-actors:
+    title: Films released in 2001, ordered by number of actors
+    body: |
+      List the films released in the year 2001 ordered by the number of actors 
+      in the cast, then by title.
+    solution: |
+      SELECT title, 
+        COUNT(roles.star_id) as num_actors
+        FROM movies
+          LEFT OUTER JOIN roles on movies.id = roles.movie_id
+        WHERE movies.release_year = 2001
+        GROUP BY title
+        ORDER BY num_actors desc, title;
+  
+  actors-who-worked-with-zoe-saldana:
+    title: All actors who have worked with Zoe Saldana
+    body: |
+      List all the people who have worked with Zoe Saldana, but
+      do not include Zoe Saldana herself. Some stars may have been
+      in multiple movies with her --- only show each star's name once.
+
+      Your query should return `star` (the star's first and last name,
+      separated by a space) and it should be ordered alphabetically by that
+      column.
+    solution: |
+      SELECT DISTINCT first_name || ' ' || last_name as star
+        FROM movies
+          JOIN roles ON movies.id = roles.movie_id
+          JOIN stars ON stars.id = roles.star_id
+        WHERE roles.movie_id in (
+          SELECT movie_id
+            FROM roles
+            JOIN stars ON stars.id = roles.star_id
+            WHERE first_name = 'Zoe' AND last_name = 'Saldana')
+        AND first_name != 'Zoe' OR last_name != 'Saldana'
+        ORDER BY star;
