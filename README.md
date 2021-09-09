@@ -13,3 +13,11 @@ own.
 - Problem sets are in YAML
 
 ![Components](/docs/components.svg)
+
+## Credits
+
+- the authors of the original SQLZoo for their excellent work
+- the lovely and good authors of Flask, psycopg2, React, and PostgreSQL
+- Joel Burton <joel@joelburton.com> for engineering and SQL contributions
+- Spencer Armini <spencer@rithmschool.com> for SQL contributions
+- Rithm School (https://rithmschool.com/) for sponsoring this work
