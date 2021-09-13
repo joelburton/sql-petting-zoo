@@ -1,9 +1,9 @@
-id: world-subquery
-title: SELECT within SELECT
+id: world
+title: Select statement fundamentals
 description: |
-  This tutorial looks at how we can use SELECT statements within SELECT statements
-  to perform more complex queries.
-
+  Learn the fundamentals of the `SELECT` statement.
+welcome: |
+  In this tutorial you will use the SELECT command on the table `world`.
 schema: |
   ##### The `world` table
 
@@ -37,50 +37,18 @@ schema: |
   The area is measured in square kilometers.
 questions:
 
-  bigger-than-russia:
-    title: Bigger than Russia
+  per-capita-gdp:
+    title: Per capita GDP
     body: |
-      List each country name where the population is larger than that of 'Russia'.
-    initial: |
-      SELECT name FROM world
-        WHERE population > (
-          SELECT population FROM world
-            WHERE name='India');
+       Give the name and the per capita GDP for those countries with a
+       population of at least 200 million.
+    hint: Per capita GDP is the GDP divided by the population GDP/population.
+    video: https://youtu.be/5Md75Wfpocs
+    initial: ""
     solution: |
-      SELECT name FROM world
-        WHERE population > (
-          SELECT population FROM world
-            WHERE name='Russia');
-    video: https://youtu.be/UPFwlsJFcsw
-
-  richer-than-uk:
-    title: Richer than UK
-    body: |
-      Show the countries in Europe with a per capita GDP greater than 'United
-      Kingdom'.
-    hint: The per capita GDP is the gdp/population.
-    solution: |
-      SELECT name
+      SELECT name, gdp / population AS gdp_per_capita
         FROM world
-        WHERE region = 'Europe'
-          AND gdp / population > (
-            SELECT gdp / population
-              FROM world
-              WHERE name = 'United Kingdom');
-    video: https://youtu.be/RELAqb4DlvY
-
-  neighbors-of-aa:
-    title: Neighbours of Argentina and Australia
-    body: |
-      List the name and region of countries in the regions containing
-      either Argentina or Australia. Order by name of the country.
-    solution: |
-      SELECT name, region
-        FROM world
-        WHERE region IN (
-          SELECT region
-            FROM world
-            WHERE name IN ('Argentina', 'Australia'))
+        WHERE population >= 200000000
 
   south-america:
     title: South America In Millions
@@ -111,7 +79,8 @@ questions:
   united:
     title: United
     body: |
-      Show the names of countries which have a name that includes the word 'United'.
+      Show the names of countries which have a name that includes the word
+      'United'.
     solution: |
       SELECT name
         FROM world
@@ -137,10 +106,10 @@ questions:
       3 million) or big by population (more than 250 million) but not both.
       Show name, population and area.**
 
-      - Australia has a big area but a small population, it should be **included.**
-      - Indonesia has a big population but a small area, it should be **included.**
-      - China has a big population and big area, it should be **excluded.**
-      - United Kingdom has a small population and a small area, it should be **excluded.**
+      - Australia: big area but a small population: **included.**
+      - Indonesia: big population but small area: **included.**
+      - China: big population and big area: **excluded.**
+      - United Kingdom: small population and small area: **excluded.**
     solution: |
       SELECT name, population, area
         FROM world

@@ -1,15 +1,20 @@
 from __future__ import annotations
 
+import logging
 import os
+import sys
 from dataclasses import dataclass
 from typing import Any, Dict
 
 import psycopg2
 import psycopg2.extensions
 import yaml
+# noinspection PyUnresolvedReferences
+from psycopg2.errors import Error
 
 DATABASE_URL = os.environ.get("DATABASE_URL", "postgresql:///zoo_local")
 
+logger = logging.getLogger(__name__)
 
 # noinspection PyUnresolvedReferences
 decToFloat = psycopg2.extensions.new_type(
@@ -32,6 +37,7 @@ class Quiz:
     filepath: str
     schema: str = ""
     closed: bool = False
+    welcome: str = ""
 
     @classmethod
     def load_all(cls, dir_path: str) -> Dict[str: Quiz]:
@@ -64,9 +70,21 @@ class Quiz:
         if not self.closed:
             with psycopg2.connect(DATABASE_URL) as conn, conn.cursor() as cur:
                 for question in self.questions.values():
-                    cur.execute(question['solution'])
+                    try:
+                        cur.execute(question['solution'])
+                        rows = cur.fetchall()
+                    except Error as err:
+                        logger.error(f"""ERROR during question compilation:
+
+{question['title']}
+
+{question['solution']}
+
+{err}
+""")
+                        sys.exit(1)
+
                     cols = [c.name for c in cur.description]
-                    rows = cur.fetchall()
                     question['expected'] = {"cols": cols, "rows": rows}
 
     def get_problems(self, id: str, output: Dict[str, list]) -> Any:

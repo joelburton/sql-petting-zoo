@@ -1,9 +1,10 @@
-id: names
-title: SELECT names
+id: like-names
+title: Selecting names by patterns
 description: |
+  Learn to use `LIKE` and patterns.
+welcome: |
   This tutorial uses the `LIKE` operator to check names. We will be using
   the SELECT command on the table world.
-
 schema: |
   ##### The `world` table
 
@@ -276,7 +277,7 @@ questions:
       Show the name and the extension where the capital is an extension 
       of name of the country.
 
-      You can use the SQL function REPLACE.
+      You can use the SQL function `REPLACE`.
     
     initial: |
 

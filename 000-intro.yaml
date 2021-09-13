@@ -1,0 +1,122 @@
+id: intro
+title: Introduction and SELECT Basics
+description: |
+  Learn the basics of the SQL `SELECT` statement, as well as getting an
+  introduction to SQLPettingZoo.
+welcome: |
+  Learn the basics of the SQL `SELECT` statement, as well as getting an
+  introduction to SQLPettingZoo.
+
+  We'll use a database with a single table, `world`, containing information
+  about different countries in the world and facts about them.
+
+  You can see the schema for the table by clicking the "Schema" button that
+  appears below each editor.
+schema: |
+  ##### The `world` table
+
+  | Column      | Type         | Nullable | Notes                   |
+  | ----------- | ------------ | -------- | ----------------------- |
+  | name        | varchar(50)  | not null | English name of country |
+  | region      | varchar(60)  |          |                         |
+  | area        | bigint       |          |                         |
+  | population  | bigint       |          |                         |
+  | gdp         | bigint       |          |                         |
+  | capital     | varchar(60)  |          |                         |
+
+  - Indexes:
+    - "world_pkey" PRIMARY KEY, btree (name)
+    - "world_region_idx" btree (region)
+
+  ###### Sample data
+
+  | name        | region | area   | population | gdp         | capital |
+  | ----------- | ------ | ------ | ---------- | ----------- | ------- |
+  | Afghanistan | Asia   | 652230 | 25500100   | 20364000000 | Kabul   |
+  | Zimbabwe    | Africa | 390757 | 13061239   | 9802000000  | Harare  |
+
+questions:
+  intro:
+    title: Introducing world table of countries
+    body: |
+       Read the schema for this table. Then **write a `SELECT` statement that
+       shows all data about all countries.**
+    initial: |
+      -- This isn't quite right --- how can you find all columns?
+      SELECT name FROM world;
+    solution: |
+      SELECT * FROM world;
+
+  specific-fields:
+    title: Selecting just specific fields
+    body: |
+      Typically, you'll want to specify only particular columns to return from
+      a `SELECT` statement. **Show name, region, and population for all
+      countries.**
+    solution: |
+      SELECT name, region, population FROM world;
+
+  germany:
+    title: Finding the population of Germany
+    body: |
+      The example uses a `WHERE` clause to show the population of France.
+      Note that strings should be in `'single quotes'`.
+
+      **Modify it to show the population of Germany.**
+    initial: |
+      SELECT population
+        FROM world
+        WHERE name = 'France';
+    solution: |
+      SELECT population
+        FROM world
+        WHERE name = 'Germany';
+
+  scandinavia:
+    title: Scandinavia
+    body: |
+      Checking a list: The word `IN` allows us to check if an item is in a list.
+      The example shows the name and population for Brazil, Russia, India and
+      China.
+
+      **Show the name and the population for the Scandinavian countries: Sweden,
+      Norway, Finland, Iceland, and Denmark.**
+    initial: |
+      SELECT name, population FROM world
+        WHERE name IN ('Brazil', 'Russia', 'India', 'China');
+    solution: |
+      SELECT name, population FROM world
+        WHERE name IN ('Sweden', 'Norway', 'Finland', 'Iceland', 'Denmark');
+
+  right-size:
+    title: Just the right size
+    body: |
+      Which countries are not too small and not too big? `BETWEEN` allows range
+      checking (range specified is inclusive of boundary values). The example
+      below shows countries with an area from 250,000 to 300,000 km².
+
+      **Modify it to show the country and the area for countries with an area
+      between 200,000 and 250,000.**
+    initial: |
+      SELECT name, area FROM world
+        WHERE area BETWEEN 250000 AND 300000;
+    solution: |
+      SELECT name, area FROM world
+        WHERE area BETWEEN 200000 AND 250000;
+
+  large-countries:
+    title: Large Countries
+    body: |
+      Show the name for the countries that
+      have a population of at least 200 million. 200 million is 200000000
+      (there are eight zeros).
+    url: https://noads.sqlzoo.net/wiki/WHERE_filters
+    initial: |
+      SELECT name
+        FROM world
+        WHERE population > 1000000000
+    solution: |
+      SELECT name
+        FROM world
+        WHERE population > 200000000
+

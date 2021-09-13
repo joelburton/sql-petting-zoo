@@ -1,6 +1,8 @@
 id: nobel
-title: Nobel Laureates
+title: "Intermezzo: Practice Selecting"
 description: |
+  Practice selecting with Nobel prize database.
+welcome: |
   We continue practicing simple SQL queries on a single table.
 
   This tutorial is concerned with a table of Nobel prize winners:

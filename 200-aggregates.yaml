@@ -1,6 +1,8 @@
 id: aggregates
-title: SUM and COUNT
+title: Aggregate functions and grouping
 description: |
+  Learn to use aggregate functions.
+welcome: |
   This tutorial looks at how we can use the SUM and COUNT functions to aggregate
   our data.
 
@@ -43,9 +45,6 @@ questions:
       Show the total population of the world.
 
           world(name, continent, area, population, gdp)
-    initial: |
-      SELECT SUM(population)
-        FROM world;
     solution: |
       SELECT SUM(population)
         FROM world;
@@ -64,7 +63,7 @@ questions:
     body: |
       Give the total GDP of Africa.
     solution: |
-      SELECT sum(gdp)
+      SELECT SUM(gdp)
         FROM world
         WHERE region = 'Africa';
 

@@ -33,6 +33,7 @@ def api_get() -> Response:
             "description": quiz.description,
             "questions": quiz.questions,
             "schema": quiz.schema,
+            "welcome": quiz.welcome,
         }
 
     out = json.dumps({

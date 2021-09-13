@@ -56,7 +56,7 @@ function Question({ quizId, question, questionId, toggleSchema, prev }) {
 
   async function submitSqlToServer(sql) {
     // This will cause the results to disappear until the next load, which is
-    // enough UX change for the user to know "something is happening".
+    // enough UX change for the user to know "something is happening".¡™
     setResults(null);
     const { rows, cols, problems } = await submitSql(quizId, questionId, sql);
 

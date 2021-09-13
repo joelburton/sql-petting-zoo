@@ -29,7 +29,7 @@ function Quiz({ quizId, quiz, prev }) {
         { showingSchema &&
         <Schema schema={ quiz.schema } toggleSchema={ toggleSchema } /> }
         <h1>{ quiz.title }</h1>
-        <div className="lead"><Markdown children={ quiz.description } /></div>
+        <div className="lead"><Markdown children={ quiz.welcome } /></div>
         { Object.entries(quiz.questions).map(([id, question]) =>
             <Question
                 key={ id }

@@ -1,7 +1,11 @@
-id: world
-title: SELECT from WORLD
+id: world-subquery
+title: Subqueries
 description: |
-  In this tutorial you will use the SELECT command on the table `world`.
+  Learn to use subqueries.
+welcome: |
+  This tutorial looks at how we can use SELECT statements within SELECT statements
+  to perform more complex queries.
+
 schema: |
   ##### The `world` table
 
@@ -35,44 +39,50 @@ schema: |
   The area is measured in square kilometers.
 questions:
 
-  intro:
-    title: Introduction
+  bigger-than-russia:
+    title: Bigger than Russia
     body: |
-       Read the notes about this table. Observe the result of running this SQL
-       command to show the name, region and population of all countries.
+      List each country name where the population is larger than that of 'Russia'.
     initial: |
-      SELECT name, region, population FROM world;
+      SELECT name FROM world
+        WHERE population > (
+          SELECT population FROM world
+            WHERE name='India');
     solution: |
-      SELECT name, region, population FROM world;
+      SELECT name FROM world
+        WHERE population > (
+          SELECT population FROM world
+            WHERE name='Russia');
+    video: https://youtu.be/UPFwlsJFcsw
 
-  large-countries:
-    title: Large Countries
+  richer-than-uk:
+    title: Richer than UK
     body: |
-      Show the name for the countries that
-      have a population of at least 200 million. 200 million is 200000000
-      (there are eight zeros).
-    url: https://noads.sqlzoo.net/wiki/WHERE_filters
-    initial: |
+      Show the countries in Europe with a per capita GDP greater than 'United
+      Kingdom'.
+    hint: The per capita GDP is the gdp/population.
+    solution: |
       SELECT name
         FROM world
-        WHERE population > 1000000000
-    solution: |
-      SELECT name
-        FROM world
-        WHERE population > 200000000
+        WHERE region = 'Europe'
+          AND gdp / population > (
+            SELECT gdp / population
+              FROM world
+              WHERE name = 'United Kingdom');
+    video: https://youtu.be/RELAqb4DlvY
 
-  per-capita-gdp:
-    title: Per capita GDP
+  neighbors-of-aa:
+    title: Neighbours of Argentina and Australia
     body: |
-       Give the name and the per capita GDP for those countries with a
-       population of at least 200 million.
-    hint: Per capita GDP is the GDP divided by the population GDP/population.
-    video: https://youtu.be/5Md75Wfpocs
-    initial: ""
+      List the name and region of countries in the regions containing
+      either Argentina or Australia. Order by name of the country.
     solution: |
-      SELECT name, gdp / population AS gdp_per_capita
+      SELECT name, region
         FROM world
-        WHERE population >= 200000000
+        WHERE region IN (
+          SELECT region
+            FROM world
+            WHERE name IN ('Argentina', 'Australia'))
 
   south-america:
     title: South America In Millions
