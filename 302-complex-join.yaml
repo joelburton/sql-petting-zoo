@@ -52,7 +52,9 @@ questions:
     title: List all data
     body: |
       Join the two tables so that every column and record appears, regardless of 
-      if there is not an owner_id. Your output should look like this:
+      if there is not an owner_id. 
+      
+      Your output should look like this:
 
       ```
       id | first_name | id |  make  |  model  | year |  price   | owner_id
@@ -93,7 +95,9 @@ questions:
     body: |
       Count the number of cars for each owner who has a vehicle. Display the 
       owners first_name and count of vehicles. The first_name should be ordered 
-      in ascending order. Your output should look like this:
+      in ascending order. 
+      
+      Your output should look like this:
 
       ```
       first_name | count
@@ -185,4 +189,3 @@ questions:
           LEFT OUTER JOIN vehicles v ON o.id = v.owner_id
         GROUP BY o.id
         ORDER BY count;
-  
