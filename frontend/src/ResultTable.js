@@ -21,6 +21,13 @@ function ResultTable({ cols, rows }) {
     return <pre>{ rows[0] }</pre>;
   }
 
+  function showField(val) {
+      if (val === true) return <i>true</i>;
+      else if (val === false) return <i>false</i>;
+      else if (val === null) return <i>null</i>;
+      else return val;
+  }
+
   return (
       <div
           className="overflow-scroll"
@@ -37,7 +44,7 @@ function ResultTable({ cols, rows }) {
           <tbody>
           { rows.map((row, idx) =>
               <tr key={ idx }>
-                { row.map((fld, idx) => <td key={ idx }>{ fld }</td>) }
+                { row.map((fld, idx) => <td key={ idx }>{ showField(fld) }</td>) }
               </tr>,
           ) }
           </tbody>

@@ -1,29 +1,24 @@
-import json
-from typing import Dict
+from typing import Dict, Any
 
 import psycopg2
 # noinspection PyUnresolvedReferences
 from psycopg2.errors import Error
-from flask import Flask, Response, request
+from flask import Flask, request
 from flask_cors import CORS
 
 from quiz import Quiz, DATABASE_URL
 
 app = Flask(__name__)
+app.json.sort_keys = False
 CORS(app)
 
 quizzes = Quiz.load_all(app.root_path)
 
 
 @app.route("/api/")
-def api_get() -> Response:
+def api_get() -> Dict[str, Dict[str, Any]]:
     """Get quizzes: {quizzes: [{title, body, questions, schema}]."""
 
-    # An undocumented change in Flask is that jsonify now defaults to sorting
-    # the keys of the output string. Our questions are in an order which should
-    # be kept, so doing this ourselves. Do not "improve" this by changing it
-    # to jsonify (or just returning an object, which modern Flask will
-    # automatically jsonify).
     out_quizzes = {}
 
     for id, quiz in quizzes.items():
@@ -36,10 +31,7 @@ def api_get() -> Response:
             "welcome": quiz.welcome,
         }
 
-    out = json.dumps({
-        "quizzes": out_quizzes
-    }, sort_keys=False)
-    return Response(out, mimetype="application/json")
+    return {"quizzes": out_quizzes}
 
 
 @app.route("/api/run/<quiz_id>/<question_id>/", methods=["POST"])
