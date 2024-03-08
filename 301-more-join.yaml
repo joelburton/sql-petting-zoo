@@ -84,7 +84,7 @@ questions:
       SELECT id, title
         FROM movies
         WHERE release_year=2018;
-  
+
   wonder-woman-year:
     title: When was Wonder Woman released?
     body: |
@@ -105,39 +105,39 @@ questions:
         FROM movies
         WHERE title LIKE '%Star Wars%'
         ORDER BY release_year;
-  
+
   morgan-freeman-id:
     title: ID for actor Morgan Freeman
     body: |
       What id number does the actor 'Morgan Freeman' have?
     solution: |
-      SELECT id 
-        FROM stars 
+      SELECT id
+        FROM stars
         WHERE first_name = 'Morgan' AND last_name = 'Freeman';
-  
+
   titanic-id:
     title: ID for the movie 'Titanic'
     body: |
       What is the id of the film 'Titanic'?
     solution: |
-      SELECT id 
+      SELECT id
         FROM movies
         WHERE title = 'Titanic';
-  
+
   titanic-cast:
     title: Cast list for the movie 'Titanic'
     body: |
       Obtain the cast list for 'Titanic'.
-      
+
       The cast list is the names of the actors who were in the movie.
-      
+
       Use movie.id = X, where X is the value you received from the previous question
     solution: |
       SELECT stars.first_name, stars.last_name
         FROM roles
           JOIN stars on roles.star_id = stars.id
         WHERE roles.movie_id = 3;
-  
+
   shrek-cast:
     title: Cast list for the movie 'Shrek'
     body: |
@@ -148,7 +148,7 @@ questions:
           JOIN roles on movies.id = roles.movie_id
           JOIN stars on roles.star_id = stars.id
         WHERE movies.title = 'Shrek';
-  
+
   viola-davis-movies:
     title: Viola Davis movies
     body: |
@@ -160,12 +160,12 @@ questions:
           JOIN stars on roles.star_id = stars.id
         WHERE stars.first_name = 'Viola'
           AND stars.last_name = 'Davis';
-  
+
   octavia-spencer-supporting-actress-movies:
     title: Octavia Spencer as a supporting actress
     body: |
       List the films where Octavia Spencer has appeared - but not in the starring
-       role. [Note: the lead_role field of the roles table gives the position of 
+       role. [Note: the lead_role field of the roles table gives the position of
        the actor. If lead_role='true' then this actor is in the starring role]
     solution: |
       SELECT movies.title
@@ -194,11 +194,11 @@ questions:
   busy-years-for-emma-watson:
     title: Busy years for Emma Watson
     body: |
-      Which were the busiest years for Emma Watson, show the year and the 
+      Which were the busiest years for Emma Watson, show the year and the
       number of movies she made each year for any year in which she made at
       least one movie.
     initial: |
-      SELECT release_year, COUNT(title) 
+      SELECT release_year, COUNT(title)
         FROM movies
           JOIN roles ON movies.id = roles.movie_id
           JOIN stars ON roles.star_id = stars.id
@@ -207,7 +207,7 @@ questions:
         GROUP BY release_year
         HAVING COUNT(title) > 1;
     solution: |
-      SELECT release_year, COUNT(title) 
+      SELECT release_year, COUNT(title)
         FROM movies
           JOIN roles ON movies.id = roles.movie_id
           JOIN stars ON roles.star_id=stars.id
@@ -215,7 +215,7 @@ questions:
           AND stars.last_name = 'Watson'
         GROUP BY release_year
         HAVING COUNT(title) >= 1;
-  
+
   lead-actors-in-daniel-radcliffe-movies:
     title: Lead actors in Daniel Radcliffe movies
     body: |
@@ -243,14 +243,14 @@ questions:
                 JOIN stars ON stars.id = roles.star_id
               WHERE stars.first_name = 'Daniel'
               AND stars.last_name = 'Radcliffe');
-  
+
   actors-with-at-least-2-leading-roles:
     title: Actors with at least 2 leading roles
     body: |
       Obtain a list, in alphabetical order, of actors who've had at least
        2 starring roles.
     solution: |
-      SELECT 
+      SELECT
         DISTINCT first_name || ' ' || stars.last_name as actor
         FROM movies
           JOIN roles on movies.id = roles.movie_id
@@ -259,21 +259,21 @@ questions:
         GROUP BY actor
         HAVING COUNT(movies.title) >= 2
         ORDER BY actor;
-  
+
   films-released-in-2001-ordered-by-num-actors:
     title: Films released in 2001, ordered by number of actors
     body: |
-      List the films released in the year 2001 ordered by the number of actors 
+      List the films released in the year 2001 ordered by the number of actors
       in the cast, then by title.
     solution: |
-      SELECT title, 
+      SELECT title,
         COUNT(roles.star_id) as num_actors
         FROM movies
           LEFT OUTER JOIN roles on movies.id = roles.movie_id
         WHERE movies.release_year = 2001
         GROUP BY title
         ORDER BY num_actors desc, title;
-  
+
   actors-who-worked-with-zoe-saldana:
     title: All actors who have worked with Zoe Saldana
     body: |
@@ -294,5 +294,5 @@ questions:
             FROM roles
             JOIN stars ON stars.id = roles.star_id
             WHERE first_name = 'Zoe' AND last_name = 'Saldana')
-        AND first_name != 'Zoe' OR last_name != 'Saldana'
+        AND first_name != 'Zoe' AND last_name != 'Saldana'
         ORDER BY star;
